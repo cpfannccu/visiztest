@@ -58,6 +58,7 @@
       display:flex;
       gap:10px;
       flex-wrap:wrap;
+      justify-content:center;
     }
 
     .stat{
@@ -67,6 +68,7 @@
       padding:10px 14px;
       min-width:110px;
       box-shadow:0 4px 14px rgba(15,23,42,.04);
+      text-align:center;
     }
 
     .stat .k{
@@ -85,18 +87,25 @@
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      padding:14px;
+      padding:12px;
       display:grid;
-      grid-template-columns:1fr 1fr auto;
+      grid-template-columns:minmax(0, 220px) minmax(0, 220px) auto;
+      justify-content:space-between;
+      align-items:end;
       gap:10px;
       margin-bottom:14px;
     }
 
+    .toolbar-field{
+      width:100%;
+      max-width:220px;
+    }
+
     label{
       display:block;
-      font-size:13px;
+      font-size:12px;
       color:var(--muted);
-      margin-bottom:6px;
+      margin-bottom:5px;
     }
 
     select,button{
@@ -106,10 +115,11 @@
     select{
       width:100%;
       border:1px solid var(--line);
-      border-radius:12px;
-      padding:12px;
+      border-radius:10px;
+      padding:9px 10px;
       background:#fff;
       color:var(--text);
+      font-size:14px;
     }
 
     .toolbar-actions{
@@ -464,6 +474,7 @@
         border:1px solid var(--line);
         border-radius:10px;
         padding:5px 6px;
+        text-align:center;
       }
 
       .mobile-card .k{
@@ -479,22 +490,34 @@
       }
 
       .toolbar{
-        grid-template-columns:1fr;
+        grid-template-columns:1fr 1fr;
+        justify-content:stretch;
+        align-items:end;
         padding:8px;
         gap:6px;
         margin-bottom:8px;
         border-radius:14px;
       }
 
+      .toolbar-field{
+        max-width:none;
+      }
+
+      .toolbar-actions{
+        grid-column:1 / -1;
+        justify-content:center;
+        gap:8px;
+      }
+
       .toolbar label{
-        font-size:11px;
+        font-size:10px;
         margin-bottom:3px;
       }
 
       .toolbar select{
-        padding:8px 10px;
-        font-size:13px;
-        border-radius:10px;
+        padding:7px 8px;
+        font-size:12px;
+        border-radius:9px;
       }
 
       .toolbar .btn{
@@ -502,11 +525,6 @@
         font-size:13px;
         border-radius:10px;
         min-width:96px;
-      }
-
-      .toolbar-actions{
-        justify-content:center;
-        gap:8px;
       }
 
       .panel{
@@ -723,7 +741,7 @@
     </div>
 
     <div class="toolbar">
-      <div>
+      <div class="toolbar-field">
         <label>模式</label>
         <select id="modeSelect">
           <option value="sequential">順序練習</option>
@@ -734,7 +752,7 @@
           <option value="wrongOnly">錯題複習</option>
         </select>
       </div>
-      <div>
+      <div class="toolbar-field">
         <label>章節分類</label>
         <select id="chapterSelect">
           <option value="all">全部章節</option>
