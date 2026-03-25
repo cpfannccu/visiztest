@@ -1006,12 +1006,6 @@
     </div>
   </div>
 
-  <div class="mobile-bar">
-    <button class="prev" id="mPrevBtn">上一題</button>
-    <button class="next" id="mNextBtn">下一題</button>
-    <button class="submit" id="mSubmitBtn" style="display:none;">交卷</button>
-  </div>
-
   <script>
     const AUTO_NEXT_DELAY = 650;
 
@@ -1100,7 +1094,9 @@
       {id:66,chapter:"compare",question:"下列何者不是柱狀圖的優點？",options:{A:"提供清晰的分類比較，凸顯類別間差異",B:"易於了解每個類別的相對大小",C:"簡單易懂，易於解讀圖表意涵",D:"當類別數很多時，仍然容易判讀"},answer:"D"},
       {id:67,chapter:"tools",question:"下列哪一個圖形在 Power BI 內未有預設內建的視覺效果？",options:{A:"柱狀圖",B:"長條圖",C:"棒棒糖圖",D:"成對長條圖"},answer:"C"},
       {id:68,chapter:"compare",question:"下列哪一個在實務上較少用來比較的資料量值？",options:{A:"次數",B:"數量",C:"金額",D:"心理感受"},answer:"D"},
+
       {id:69,chapter:"partwhole",question:"想瞭解個別成分的大小，較適合使用哪類圖形來展現資料的特性？",options:{A:"離散差異圖表",B:"分佈視覺化圖表",C:"量比較圖表",D:"部分和整體關係圖表"},answer:"C"},
+
       {id:70,chapter:"partwhole",question:"最常被使用來呈現部分與整體關係的圖形指的是以下何者？",options:{A:"凹凸線圖",B:"累積曲線圖",C:"甜甜圈圖",D:"旭日圖"},answer:"C"},
       {id:71,chapter:"partwhole",question:"以下哪一個圖形又稱為華夫餅圖（Waffle Chart）？",options:{A:"凹凸線圖",B:"散布圖",C:"樹狀圖",D:"網格圖"},answer:"D"},
       {id:72,chapter:"partwhole",question:"下列哪一個圖形的名稱來自於芬蘭的時尚家居公司的名字？",options:{A:"長條圖",B:"旭日圖",C:"比例堆疊條形圖",D:"網格圖"},answer:"C"},
@@ -1206,9 +1202,6 @@
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const submitBtn = document.getElementById("submitBtn");
-    const mPrevBtn = document.getElementById("mPrevBtn");
-    const mNextBtn = document.getElementById("mNextBtn");
-    const mSubmitBtn = document.getElementById("mSubmitBtn");
 
     const quizWrap = document.getElementById("quizWrap");
     const resultWrap = document.getElementById("resultWrap");
@@ -1453,20 +1446,15 @@
       const atLast = state.index >= total - 1 || total === 0;
 
       prevBtn.disabled = atFirst;
-      mPrevBtn.disabled = atFirst;
       nextBtn.disabled = atLast;
-      mNextBtn.disabled = atLast;
 
       prevBtn.style.opacity = atFirst ? ".55" : "1";
-      mPrevBtn.style.opacity = atFirst ? ".55" : "1";
       nextBtn.style.opacity = atLast ? ".55" : "1";
-      mNextBtn.style.opacity = atLast ? ".55" : "1";
     }
 
     function updateSubmitButtons(){
       const showSubmit = isExamMode() && !state.submitted;
       submitBtn.style.display = showSubmit ? "inline-block" : "none";
-      mSubmitBtn.style.display = showSubmit ? "inline-block" : "none";
     }
 
     function saveWrongQuestion(id){
@@ -1749,10 +1737,7 @@
     clearWrongBtn.addEventListener("click", clearWrongQuestions);
     prevBtn.addEventListener("click", goPrev);
     nextBtn.addEventListener("click", goNext);
-    mPrevBtn.addEventListener("click", goPrev);
-    mNextBtn.addEventListener("click", goNext);
     submitBtn.addEventListener("click", submitExam);
-    mSubmitBtn.addEventListener("click", submitExam);
     reviewBtn.addEventListener("click", backToReview);
     restartExamBtn.addEventListener("click", restartExam);
     backPracticeBtn.addEventListener("click", backPractice);
