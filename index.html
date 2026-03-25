@@ -413,17 +413,13 @@
       display:none;
     }
 
-    .mobile-bar{
-      display:none;
-    }
-
     @media (max-width: 768px){
       html{
-        scroll-padding-top:100px;
+        scroll-padding-top:88px;
       }
 
       .app{
-        padding:100px 6px 14px;
+        padding:88px 6px 14px;
       }
 
       .top{
@@ -446,7 +442,7 @@
       .mobile-top-shell{
         background:linear-gradient(135deg,#1d4ed8,#2563eb 55%,#60a5fa);
         border-radius:20px;
-        padding:12px 12px 10px;
+        padding:10px 12px;
         box-shadow:0 16px 30px rgba(29,78,216,.20);
         color:#fff;
         transition:all .25s ease;
@@ -458,7 +454,7 @@
 
       .mobile-top.compact .mobile-top-shell{
         border-radius:16px;
-        padding:9px 10px 8px;
+        padding:8px 10px;
         box-shadow:0 10px 22px rgba(29,78,216,.18);
       }
 
@@ -469,43 +465,8 @@
         gap:8px;
       }
 
-      .mobile-brand{
-        display:flex;
-        align-items:center;
-        gap:10px;
-        min-width:0;
-      }
-
-      .mobile-logo{
-        width:38px;
-        height:38px;
-        border-radius:12px;
-        background:rgba(255,255,255,.18);
-        border:1px solid rgba(255,255,255,.22);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:#fff;
-        font-size:18px;
-        font-weight:900;
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
-        flex:0 0 38px;
-        transition:all .25s ease;
-      }
-
-      .mobile-top.compact .mobile-logo{
-        width:30px;
-        height:30px;
-        border-radius:10px;
-        font-size:15px;
-        flex-basis:30px;
-      }
-
-      .mobile-title-wrap{
-        min-width:0;
-      }
-
       .mobile-title{
+        min-width:0;
         font-size:15px;
         font-weight:900;
         line-height:1.2;
@@ -518,22 +479,6 @@
 
       .mobile-top.compact .mobile-title{
         font-size:13px;
-      }
-
-      .mobile-subtitle{
-        margin-top:2px;
-        font-size:11px;
-        color:rgba(255,255,255,.82);
-        line-height:1.2;
-        transition:opacity .2s ease, max-height .2s ease, margin .2s ease;
-        max-height:24px;
-        overflow:hidden;
-      }
-
-      .mobile-top.compact .mobile-subtitle{
-        opacity:0;
-        max-height:0;
-        margin-top:0;
       }
 
       .mobile-stats-toggle{
@@ -558,54 +503,6 @@
         padding:6px 10px;
         font-size:11px;
         border-radius:10px;
-      }
-
-      .mobile-info-strip{
-        margin-top:10px;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:8px;
-        background:rgba(255,255,255,.12);
-        border:1px solid rgba(255,255,255,.16);
-        border-radius:12px;
-        padding:8px 10px;
-        backdrop-filter:blur(4px);
-        transition:opacity .2s ease, max-height .2s ease, margin .2s ease, padding .2s ease;
-        max-height:70px;
-        overflow:hidden;
-      }
-
-      .mobile-top.compact .mobile-info-strip{
-        opacity:0;
-        max-height:0;
-        margin-top:0;
-        padding-top:0;
-        padding-bottom:0;
-        border-width:0;
-      }
-
-      .mobile-info-item{
-        display:flex;
-        flex-direction:column;
-        gap:2px;
-        min-width:0;
-      }
-
-      .mobile-info-label{
-        font-size:10px;
-        color:rgba(255,255,255,.74);
-        font-weight:700;
-        letter-spacing:.4px;
-      }
-
-      .mobile-info-value{
-        font-size:12px;
-        color:#fff;
-        font-weight:900;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
       }
 
       .mobile-mini{
@@ -855,10 +752,6 @@
       .score{
         font-size:46px;
       }
-
-      .mobile-bar{
-        display:none !important;
-      }
     }
   </style>
 </head>
@@ -867,25 +760,8 @@
     <div class="mobile-top" id="mobileTop">
       <div class="mobile-top-shell">
         <div class="mobile-row">
-          <div class="mobile-brand">
-            <div class="mobile-logo">視</div>
-            <div class="mobile-title-wrap">
-              <div class="mobile-title">視覺化軟體應用師題庫</div>
-              <div class="mobile-subtitle">練習模式 / 測驗模式 / 錯題複習</div>
-            </div>
-          </div>
+          <div class="mobile-title">視覺化軟體應用師題庫</div>
           <button class="mobile-stats-toggle" id="mobileStatsToggle" type="button">展開統計</button>
-        </div>
-
-        <div class="mobile-info-strip">
-          <div class="mobile-info-item">
-            <div class="mobile-info-label">目前模式</div>
-            <div class="mobile-info-value" id="mobileModeText">尚未開始</div>
-          </div>
-          <div class="mobile-info-item" style="text-align:right;">
-            <div class="mobile-info-label">目前章節</div>
-            <div class="mobile-info-value" id="mobileChapterText">全部章節</div>
-          </div>
         </div>
 
         <div class="mobile-mini" id="mobileMini">
@@ -1094,9 +970,7 @@
       {id:66,chapter:"compare",question:"下列何者不是柱狀圖的優點？",options:{A:"提供清晰的分類比較，凸顯類別間差異",B:"易於了解每個類別的相對大小",C:"簡單易懂，易於解讀圖表意涵",D:"當類別數很多時，仍然容易判讀"},answer:"D"},
       {id:67,chapter:"tools",question:"下列哪一個圖形在 Power BI 內未有預設內建的視覺效果？",options:{A:"柱狀圖",B:"長條圖",C:"棒棒糖圖",D:"成對長條圖"},answer:"C"},
       {id:68,chapter:"compare",question:"下列哪一個在實務上較少用來比較的資料量值？",options:{A:"次數",B:"數量",C:"金額",D:"心理感受"},answer:"D"},
-
       {id:69,chapter:"partwhole",question:"想瞭解個別成分的大小，較適合使用哪類圖形來展現資料的特性？",options:{A:"離散差異圖表",B:"分佈視覺化圖表",C:"量比較圖表",D:"部分和整體關係圖表"},answer:"C"},
-
       {id:70,chapter:"partwhole",question:"最常被使用來呈現部分與整體關係的圖形指的是以下何者？",options:{A:"凹凸線圖",B:"累積曲線圖",C:"甜甜圈圖",D:"旭日圖"},answer:"C"},
       {id:71,chapter:"partwhole",question:"以下哪一個圖形又稱為華夫餅圖（Waffle Chart）？",options:{A:"凹凸線圖",B:"散布圖",C:"樹狀圖",D:"網格圖"},answer:"D"},
       {id:72,chapter:"partwhole",question:"下列哪一個圖形的名稱來自於芬蘭的時尚家居公司的名字？",options:{A:"長條圖",B:"旭日圖",C:"比例堆疊條形圖",D:"網格圖"},answer:"C"},
@@ -1176,8 +1050,6 @@
     const mTotalEl = document.getElementById("mTotal");
     const mRateEl = document.getElementById("mRate");
     const mAnsweredEl = document.getElementById("mAnswered");
-    const mobileModeText = document.getElementById("mobileModeText");
-    const mobileChapterText = document.getElementById("mobileChapterText");
     const mobileTop = document.getElementById("mobileTop");
 
     const modeBadge = document.getElementById("modeBadge");
@@ -1259,16 +1131,6 @@
         wrongOnly: "錯題複習"
       };
       return map[state.mode] || state.mode;
-    }
-
-    function getChapterName(key){
-      if(key === "all") return "全部章節";
-      return chapters[key] || key || "全部章節";
-    }
-
-    function updateMobileHeaderInfo(){
-      mobileModeText.textContent = state.list.length ? getModeName() : "尚未開始";
-      mobileChapterText.textContent = getChapterName(state.chapter);
     }
 
     function handleMobileHeaderCompact(){
@@ -1392,7 +1254,6 @@
         statusLine.classList.add("show");
         statusLine.textContent = "目前沒有符合條件的題目。若選擇錯題複習，請先累積錯題。";
         updateStats();
-        updateMobileHeaderInfo();
         updateNavButtons();
         updateSubmitButtons();
         updateProgress();
@@ -1570,7 +1431,6 @@
       quizWrap.style.display = "none";
       resultWrap.classList.add("show");
       updateStats();
-      updateMobileHeaderInfo();
     }
 
     function renderFeedback(q){
@@ -1671,7 +1531,6 @@
       renderFeedback(q);
       renderQnav();
       updateStats();
-      updateMobileHeaderInfo();
       updateProgress();
       updateNavButtons();
       updateSubmitButtons();
@@ -1725,7 +1584,6 @@
 
     buildChapterOptions();
     updateStats();
-    updateMobileHeaderInfo();
     updateProgress();
     updateNavButtons();
     updateSubmitButtons();
