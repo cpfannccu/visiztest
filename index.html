@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>視覺化軟體應用師題庫練習系統</title>
+  <meta name="theme-color" content="#1d4ed8" />
+  <meta name="description" content="視覺化軟體應用師題庫練習系統，可直接公開分享給任何人練習。" />
+  <style>
+    :root{
+      --bg:#f3f6fb;
+      --card:#ffffff;
+      --line:#d9e2ef;
+      --text:#0f172a;
+      --muted:#64748b;
+      --primary:#1d4ed8;
+      --primary-soft:#eff6ff;
+      --success:#15803d;
+      --success-bg:#f0fdf4;
+      --danger:#b91c1c;
+      --danger-bg:#fef2f2;
+      --warning:#b45309;
+      --warning-bg:#fffbeb;
+      --shadow:0 12px 32px rgba(15,23,42,.06);
+      --radius:20px;
+      --safe-bottom:calc(env(safe-area-inset-bottom, 0px) + 10px);
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .app{
+      max-width:1080px;
+      margin:0 auto;
+      padding:14px 14px 100px;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .title{
+      font-size:26px;
+      font-weight:900;
+      line-height:1.2;
+    }
+
+    .sub{
+      color:var(--muted);
+      margin-top:6px;
+      font-size:14px;
+    }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:10px 14px;
+      min-width:110px;
+      box-shadow:0 4px 14px rgba(15,23,42,.04);
+    }
+
+    .stat .k{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .stat .v{
+      margin-top:4px;
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .toolbar{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
+      display:grid;
+      grid-template-columns:1fr 1fr auto;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    select,button{
+      font:inherit;
+    }
+
+    select{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+      background:#fff;
+      color:var(--text);
+    }
+
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:12px 18px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .btn-light{
+      background:#eef2ff;
+      color:#1e40af;
+    }
+
+    .btn-warning{
+      background:#f59e0b;
+      color:#fff;
+    }
+
+    .btn-danger{
+      background:#ef4444;
+      color:#fff;
+    }
+
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--primary-soft);
+      border:1px solid #dbeafe;
+      color:var(--primary);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .meta{
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .status-line{
+      margin-bottom:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:var(--warning-bg);
+      border:1px solid #fde68a;
+      color:var(--warning);
+      font-size:14px;
+      display:none;
+    }
+
+    .status-line.show{
+      display:block;
+    }
+
+    .progress-info{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .progress{
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      background:#e7edf6;
+      overflow:hidden;
+      margin-bottom:18px;
+    }
+
+    .bar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#1d4ed8,#60a5fa);
+      transition:width .25s ease;
+    }
+
+    .chapter{
+      display:inline-flex;
+      align-items:center;
+      padding:7px 11px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:#475569;
+      background:#f8fafc;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .qno{
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:10px;
+    }
+
+    .qtext{
+      font-size:28px;
+      line-height:1.65;
+      font-weight:900;
+      margin-bottom:22px;
+    }
+
+    .options{
+      display:grid;
+      gap:14px;
+    }
+
+    .option{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      min-height:74px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px 18px;
+      background:#fff;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .option:hover{
+      border-color:#bfd3fb;
+      box-shadow:0 6px 16px rgba(29,78,216,.06);
+    }
+
+    .option.disabled{
+      cursor:default;
+    }
+
+    .option-key{
+      width:34px;
+      flex:0 0 34px;
+      font-size:22px;
+      font-weight:900;
+      line-height:1.3;
+    }
+
+    .option-text{
+      flex:1;
+      font-size:20px;
+      line-height:1.6;
+      font-weight:700;
+      word-break:break-word;
+    }
+
+    .option.selected{
+      border:2px solid #38bdf8;
+      box-shadow:0 0 0 4px rgba(56,189,248,.08);
+    }
+
+    .option.correct{
+      background:var(--success-bg);
+      border-color:#86efac;
+    }
+
+    .option.wrong{
+      background:var(--danger-bg);
+      border-color:#fca5a5;
+    }
+
+    .feedback{
+      display:none;
+      margin-top:16px;
+      border:1px dashed var(--line);
+      border-radius:16px;
+      padding:14px 16px;
+      background:#fff;
+    }
+
+    .feedback.show{
+      display:block;
+    }
+
+    .ok{
+      color:var(--success);
+      font-weight:900;
+    }
+
+    .bad{
+      color:var(--danger);
+      font-weight:900;
+    }
+
+    .desc{
+      margin-top:8px;
+      color:#475569;
+      line-height:1.7;
+    }
+
+    .nav-actions{
+      display:flex;
+      gap:10px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .qnav-wrap{
+      margin-top:18px;
+      padding-top:16px;
+      border-top:1px solid var(--line);
+    }
+
+    .qnav-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .qnav{
+      display:grid;
+      grid-template-columns:repeat(10,1fr);
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .qnum{
+      border:none;
+      border-radius:10px;
+      padding:10px 0;
+      background:#eef2f7;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .qnum.current{background:#1d4ed8;color:#fff}
+    .qnum.right{background:#dcfce7;color:#166534}
+    .qnum.wrong{background:#fee2e2;color:#991b1b}
+    .qnum.answered{background:#dbeafe;color:#1d4ed8}
+
+    .result{
+      display:none;
+      text-align:center;
+      padding:34px 16px 10px;
+    }
+
+    .result.show{
+      display:block;
+    }
+
+    .score{
+      font-size:72px;
+      font-weight:900;
+      color:var(--primary);
+      margin:8px 0 10px;
+    }
+
+    .mobile-top{
+      display:none;
+    }
+
+    .mobile-bar{
+      display:none;
+    }
+
+    @media (max-width: 768px){
+      .app{
+        padding:10px 10px 90px;
+      }
+
+      .top{
+        display:none;
+      }
+
+      .mobile-top{
+        display:block;
+        position:sticky;
+        top:0;
+        z-index:20;
+        margin:0 -10px 10px;
+        padding:10px;
+        background:rgba(243,246,251,.95);
+        backdrop-filter:blur(10px);
+        border-bottom:1px solid rgba(217,226,239,.9);
+      }
+
+      .mobile-row{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:10px;
+      }
+
+      .mobile-title{
+        font-size:18px;
+        font-weight:900;
+      }
+
+      .mobile-mini{
+        margin-top:8px;
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:8px;
+      }
+
+      .mobile-card{
+        background:#fff;
+        border:1px solid var(--line);
+        border-radius:14px;
+        padding:8px 10px;
+      }
+
+      .mobile-card .k{
+        font-size:11px;
+        color:var(--muted);
+      }
+
+      .mobile-card .v{
+        margin-top:3px;
+        font-size:18px;
+        font-weight:900;
+      }
+
+      .toolbar{
+        grid-template-columns:1fr;
+        padding:12px;
+      }
+
+      .panel{
+        padding:14px;
+        border-radius:18px;
+      }
+
+      .qtext{
+        font-size:21px;
+      }
+
+      .option{
+        padding:14px;
+        border-radius:16px;
+        gap:10px;
+      }
+
+      .option-key{
+        width:28px;
+        flex:0 0 28px;
+        font-size:18px;
+      }
+
+      .option-text{
+        font-size:16px;
+      }
+
+      .qnav{
+        grid-template-columns:repeat(5,1fr);
+      }
+
+      .progress-info{
+        flex-direction:column;
+        gap:4px;
+      }
+
+      .nav-actions{
+        display:none;
+      }
+
+      .mobile-bar{
+        display:grid;
+        grid-template-columns:1fr 1fr 1fr;
+        gap:8px;
+        position:fixed;
+        left:10px;
+        right:10px;
+        bottom:var(--safe-bottom);
+        z-index:30;
+        background:rgba(255,255,255,.95);
+        border:1px solid var(--line);
+        border-radius:18px;
+        padding:8px;
+        box-shadow:0 10px 30px rgba(15,23,42,.12);
+        backdrop-filter:blur(8px);
+      }
+
+      .mobile-bar button{
+        border:none;
+        border-radius:12px;
+        padding:12px 8px;
+        font-weight:900;
+        cursor:pointer;
+      }
+
+      .mobile-bar .prev{
+        background:#eef2ff;
+        color:#1e40af;
+      }
+
+      .mobile-bar .next{
+        background:#1d4ed8;
+        color:#fff;
+      }
+
+      .mobile-bar .submit{
+        background:#f59e0b;
+        color:#fff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="mobile-top">
+      <div class="mobile-row">
+        <div class="mobile-title">視覺化軟體應用師題庫</div>
+      </div>
+      <div class="mobile-mini">
+        <div class="mobile-card">
+          <div class="k">題數</div>
+          <div class="v" id="mTotal">135</div>
+        </div>
+        <div class="mobile-card">
+          <div class="k">正確率</div>
+          <div class="v" id="mRate">0%</div>
+        </div>
+        <div class="mobile-card">
+          <div class="k">已答</div>
+          <div class="v" id="mAnswered">0 / 0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top">
+      <div>
+        <div class="title">視覺化軟體應用師題庫練習系統</div>
+        <div class="sub">單檔版，可直接部署到 GitHub Pages / Netlify / Cloudflare Pages</div>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="k">題數</div>
+          <div class="v" id="total">135</div>
+        </div>
+        <div class="stat">
+          <div class="k">正確率</div>
+          <div class="v" id="rate">0%</div>
+        </div>
+        <div class="stat">
+          <div class="k">已答</div>
+          <div class="v" id="answered">0 / 0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div>
+        <label>模式</label>
+        <select id="modeSelect">
+          <option value="sequential">順序練習</option>
+          <option value="random">隨機練習</option>
+          <option value="exam20">模擬測驗（20 題）</option>
+          <option value="exam50">模擬測驗（50 題）</option>
+          <option value="exam100">模擬測驗（100 題）</option>
+          <option value="wrongOnly">錯題複習</option>
+        </select>
+      </div>
+      <div>
+        <label>章節分類</label>
+        <select id="chapterSelect">
+          <option value="all">全部章節</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="startBtn">開始</button>
+        <button class="btn btn-danger" id="clearWrongBtn" type="button">清除錯題</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div id="quizWrap">
+        <div class="head">
+          <span class="badge" id="modeBadge">尚未開始</span>
+          <span class="meta" id="metaText">請點選開始</span>
+        </div>
+
+        <div class="status-line" id="statusLine"></div>
+
+        <div class="progress-info">
+          <span id="progressLeft">第 0 題</span>
+          <span id="progressRight">剩餘 0 題</span>
+        </div>
+        <div class="progress"><div class="bar" id="progressBar"></div></div>
+
+        <div class="chapter" id="chapterTag">章節：尚未開始</div>
+        <div class="qno" id="questionNoText">第 0 題</div>
+        <div class="qtext" id="questionText">請先選擇模式與章節後開始。</div>
+
+        <div class="options" id="optionsBox"></div>
+
+        <div class="feedback" id="feedbackBox">
+          <div id="feedbackStatus"></div>
+          <div class="desc" id="feedbackDesc"></div>
+        </div>
+
+        <div class="nav-actions">
+          <button class="btn btn-light" id="prevBtn">上一題</button>
+          <button class="btn btn-primary" id="nextBtn">下一題</button>
+          <button class="btn btn-warning" id="submitBtn" style="display:none;">交卷</button>
+        </div>
+
+        <div class="qnav-wrap">
+          <div class="qnav-head">
+            <div class="meta">題號快速跳轉</div>
+            <div class="meta" id="navMeta">未開始</div>
+          </div>
+          <div class="qnav" id="qnav"></div>
+        </div>
+      </div>
+
+      <div id="resultWrap" class="result">
+        <h2>模擬測驗完成</h2>
+        <div class="score" id="finalScore">0%</div>
+        <p id="finalText">本次共 0 題</p>
+        <div class="nav-actions" style="justify-content:center;display:flex;">
+          <button class="btn btn-primary" id="reviewBtn">查看試題詳解</button>
+          <button class="btn btn-light" id="restartExamBtn">再測一次</button>
+          <button class="btn btn-light" id="backPracticeBtn">回到練習</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-bar">
+    <button class="prev" id="mPrevBtn">上一題</button>
+    <button class="next" id="mNextBtn">下一題</button>
+    <button class="submit" id="mSubmitBtn" style="display:none;">交卷</button>
+  </div>
+
+  <script>
+    const chapters = {
+      intro: "視覺化概論與歷史",
+      color: "色彩與視覺原則",
+      tools: "Excel / Tableau / Power BI",
+      compare: "比較與離散差異圖表",
+      correlation: "相關性圖表",
+      ranking: "排序圖表",
+      distribution: "分佈圖表",
+      time: "時序圖表",
+      partwhole: "部分與整體圖表",
+      spatial: "空間圖表",
+      flow: "流向 / 流程圖",
+      dataCase: "開放資料與實作案例",
+      comprehensive: "綜合題"
+    };
+
+    const questionBank = [
+      {id:1,chapter:"intro",question:"何者為資料科學領域當中發展最快速也最引人注目的範疇之一？",options:{A:"資料視覺化",B:"資料格式化",C:"資料結構化",D:"資料標準化"},answer:"A"},
+      {id:2,chapter:"intro",question:"以圖像取代資料中的數字，以呈現出資料的特性，其作用在於從「看圖」獲得資料所傳達的訊息，意指為何？",options:{A:"資料格式化",B:"資料結構化",C:"資料標準化",D:"資料視覺化"},answer:"D"},
+      {id:3,chapter:"intro",question:"下列哪個圖像的誕生，被認為是統計資料的第一個視覺化呈現？",options:{A:"古埃及測量員將星象歸納成表格，協助城鎮佈局和建立導航地圖",B:"1644，從西班牙托雷多（Toledo）到義大利羅馬（Rome）的經度距離圖",C:"1833，利茲霍亂地圖",D:"1857，極座標式圓餅圖"},answer:"B"},
+      {id:4,chapter:"intro",question:"資料視覺化不包含下列何項專業？",options:{A:"資料科學",B:"色彩學",C:"版面設計",D:"族群認同"},answer:"D"},
+      {id:5,chapter:"color",question:"使用哪種顏色設計，顏色較柔和，提供較為賞心悅目的視覺感受？",options:{A:"類比色",B:"灰階色",C:"互補色",D:"對比色"},answer:"A"},
+      {id:6,chapter:"color",question:"下列那一個關於顏色的名詞是形容加入白色的色相，會讓顏色變淡及變亮？",options:{A:"三原色",B:"淺色(Tints)",C:"色調(Tones)",D:"色度(Shades)"},answer:"B"},
+      {id:7,chapter:"color",question:"下列哪種顏色代表「純潔、無邪、平和、寬敞、希望」？",options:{A:"黃色",B:"白色",C:"紅色",D:"紫色"},answer:"B"},
+      {id:8,chapter:"color",question:"「我們的大腦會將視覺上相似顏色、形狀、大小的物體視為同一分組」，是指哪一個格式塔視覺原則？",options:{A:"平衡原則",B:"封閉原則",C:"相似原則",D:"鄰近原則"},answer:"C"},
+      {id:9,chapter:"color",question:"「被線條包圍或是背景顏色一致的群體，會被我們的視覺與大腦判斷為同一個群體」，是指哪一個格式塔視覺原則？",options:{A:"平衡原則",B:"環繞原則",C:"相似原則",D:"鄰近原則"},answer:"B"},
+      {id:10,chapter:"color",question:"誰在西元 1666 年三稜鏡實驗發現彩色光譜，是色彩學研究的先驅？",options:{A:"伽利略",B:"牛頓",C:"狄更斯",D:"達文西"},answer:"B"},
+      {id:11,chapter:"tools",question:"下列哪一個不是 Excel 的功能？",options:{A:"計算總和 Sum",B:"深度學習",C:"條件判斷 if",D:"樞紐分析"},answer:"B"},
+      {id:12,chapter:"tools",question:"下列針對 Excel 的敘述，何者為非？",options:{A:"位於第一列第一欄的儲存格為 1A 儲存格",B:"Excel 資料表是由組成列和欄的個別儲存格所構成",C:"列是以數字編排",D:"欄是以字母編排"},answer:"A"},
+      {id:13,chapter:"tools",question:"Tableau 目前隸屬於哪一家軟體公司旗下？",options:{A:"SAP",B:"Salesforce",C:"Google",D:"Microsoft"},answer:"B"},
+      {id:14,chapter:"tools",question:"下列何者並非書上所提之資料視覺化產品？",options:{A:"Tableau Desktop",B:"Tableau Server",C:"Tableau Prep Builder",D:"Microsoft Word"},answer:"D"},
+      {id:15,chapter:"tools",question:"下列哪一個 Tableau 產品是進行資料清理與 ETL 之功能？",options:{A:"Tableau Desktop",B:"Tableau Server",C:"Tableau Prep Builder",D:"Tableau Public"},answer:"C"},
+      {id:16,chapter:"tools",question:"下列何者關於 Matplotlib 與 Micorsoft Excel 之敘述，何者為非？",options:{A:"Matplotlib 需要一些 Python 程式語言基礎，但 Excel 不需要",B:"Matplotlib 沒有圖形使用介面(GUI)，但 Excel 有",C:"Matplotlib 為開源軟體，Excel 不是",D:"任何使用者都適合使用 Matplotlib 與 Excel"},answer:"D"},
+      {id:17,chapter:"tools",question:"Power BI 的性質屬於哪一種工具？",options:{A:"商務分析工具",B:"開源自行開發工具",C:"人工智慧應用工具",D:"人工智慧開發工具"},answer:"A"},
+      {id:18,chapter:"tools",question:"Power BI 的應用可分為幾種平台？",options:{A:"兩種",B:"三種",C:"四種",D:"五種"},answer:"B"},
+      {id:19,chapter:"tools",question:"以下何者不屬於 Power BI 的應用平台？",options:{A:"Power BI 服務",B:"Power BI Desktop",C:"Power BI 行動應用程式",D:"Power BI 人工智慧進階應用平台"},answer:"D"},
+      {id:20,chapter:"tools",question:"在資料來源的連結中，【檔案】類型的資料提供幾種選擇？",options:{A:"2",B:"3",C:"8",D:"50"},answer:"C"},
+      {id:21,chapter:"compare",question:"以下何種圖形可用來於「顯示兩個(以上)類別變數間特定數量變項值差異的圖表」？",options:{A:"離散差異圖表",B:"分佈視覺化圖表",C:"量比較圖表",D:"部分和整體關係圖表"},answer:"A"},
+      {id:22,chapter:"compare",question:"以下何種圖形可以同時呈現比較與組成之關係？",options:{A:"分向長條圖",B:"雷達圖",C:"成對長條圖",D:"流程圖"},answer:"C"},
+      {id:23,chapter:"compare",question:"以下何種圖形常用來展示資料隨時序於參照線正負變化之情形？",options:{A:"南丁格爾玫瑰圖",B:"流程圖",C:"桑基圖",D:"損益線圖"},answer:"D"},
+      {id:24,chapter:"time",question:"以下何種圖於使用時需留意時間顆粒度，以免資料之周期起伏會被忽略而導致訊息遺漏？",options:{A:"折線圖",B:"分向堆疊長條圖",C:"成對長條圖",D:"小型倍數圖"},answer:"A"},
+      {id:25,chapter:"tools",question:"使用 Power BI Desktop 繪製視覺化圖形時，要在何種功能下進行？",options:{A:"報表檢視",B:"資料檢視",C:"模型檢視",D:"儀表板檢視"},answer:"A"},
+      {id:26,chapter:"tools",question:"當 Power BI Desktop 沒有直接支援某一特定圖形時，何者方式不能解決？",options:{A:"探索軟體預設提供的視覺效果是否可延伸達到效果",B:"下載第三方廠商所提供的視覺效果",C:"挑選預設提供圖形且忽視未能支援的資訊之呈現",D:"自行開發製作視覺效果"},answer:"C"},
+      {id:27,chapter:"tools",question:"使用 Power BI Desktop 製作視覺化圖形時，在何種功能下可設定資料表間的關聯性？",options:{A:"報表檢視",B:"資料檢視",C:"模型檢視",D:"儀表板檢視"},answer:"C"},
+      {id:28,chapter:"tools",question:"使用 Power BI Desktop 製作視覺化圖形時，在何種功能下可協助我們新增量值？",options:{A:"報表檢視",B:"模型檢視",C:"儀表板檢視",D:"資料表工具"},answer:"D"},
+      {id:29,chapter:"correlation",question:"以下何種圖形可用來繪製資料間的相關性？",options:{A:"離散差異圖表",B:"分佈視覺化圖表",C:"量比較圖表",D:"相關性視覺化圖表"},answer:"D"},
+      {id:30,chapter:"correlation",question:"以下何者非為相關性圖表的功用？",options:{A:"展現兩變數間的連動關係",B:"了解變數間的組成關係",C:"檢視變數間是否存在相關或因果關係",D:"掌握現況以及預測可能趨勢"},answer:"B"},
+      {id:31,chapter:"correlation",question:"以下何圖表所展示的資料特性與其它三個不同？",options:{A:"泡泡圖",B:"XY 熱圖",C:"坡度圖",D:"連接散佈圖"},answer:"C"},
+      {id:32,chapter:"time",question:"折線+柱狀圖是複合圖形，其中何者用來觀測數值的趨勢走向？",options:{A:"條狀圖",B:"折線圖",C:"柱狀圖",D:"面積圖"},answer:"B"},
+      {id:33,chapter:"correlation",question:"連接散佈圖（Connected scatterplot）顧名思義是一種複合圖表，與它將以下何者圖表以連接線結合在一起？",options:{A:"南丁格爾玫瑰圖",B:"等值線地圖",C:"流程圖",D:"散佈圖"},answer:"D"},
+      {id:34,chapter:"intro",question:"繪製視覺圖表時，製圖構思考量之元素，何者相對最不重要？",options:{A:"數據的特性",B:"製圖目標",C:"閱圖者的理解",D:"所使用的軟體"},answer:"D"},
+      {id:35,chapter:"correlation",question:"相較於其它圖形，下列何圖形僅用來呈現資料的關聯性？",options:{A:"流程圖",B:"散佈圖",C:"南丁格爾玫瑰圖",D:"等值線地圖"},answer:"B"},
+      {id:36,chapter:"correlation",question:"在散佈圖中如果資料點呈現出隨機分散的形狀，代表資料間關係為？",options:{A:"正相關",B:"無相關",C:"有相關",D:"負相關"},answer:"B"},
+      {id:37,chapter:"ranking",question:"下列何種圖形不是用來繪製資料間的排序關係？",options:{A:"泡泡圖",B:"點狀條紋圖",C:"坡度圖",D:"棒棒糖圖"},answer:"A"},
+      {id:38,chapter:"ranking",question:"下列何種圖形以誇大的形式展現出排序的相對感，閱圖者可憑直覺區辨出圓形大小？",options:{A:"點狀條紋圖",B:"排序比例符號",C:"坡度圖",D:"棒棒糖圖"},answer:"B"},
+      {id:39,chapter:"ranking",question:"下列何種圖形用來展示多類別的排名情形，以有效率且節省空間的方式將每一個資料點放置在條狀帶，適合比較兩個以上類別間的數值差異？",options:{A:"點狀條紋圖",B:"排序比例符號",C:"雷達圖",D:"棒棒糖圖"},answer:"A"},
+      {id:40,chapter:"ranking",question:"以下何種圖形用來對比狀態（如事件前後）某類別變項其數值變化之展示，且亦可由斜率的陡峭呈現出數值變化程度的排序？",options:{A:"點狀條紋圖",B:"等值線地圖",C:"坡度圖",D:"雷達圖"},answer:"C"},
+      {id:41,chapter:"ranking",question:"以下何種圖形長條末端設有一個大圓點，突顯出資料間的相對位置，以比較多類別的數值間的差異？",options:{A:"南丁格爾玫瑰圖",B:"排序比例符號",C:"雷達圖",D:"棒棒糖圖"},answer:"D"},
+      {id:42,chapter:"time",question:"以下何種圖形可突顯數據的趨勢凸性或凹性，以便更好地傳達趨勢的方向和強度，以及數據趨勢的不確定性？",options:{A:"點狀條紋圖",B:"凹凸線圖",C:"等值線地圖",D:"雷達圖"},answer:"B"},
+      {id:43,chapter:"ranking",question:"以下何種排序圖形是用來顯示數值排序的常見的基礎工具？",options:{A:"排序長條/柱狀圖",B:"凹凸線圖",C:"流程圖",D:"泡泡圖"},answer:"A"},
+      {id:44,chapter:"ranking",question:"坡度圖（Slope）的製作，可採用 Power BI Desktop 預設提供的哪一個視覺效果達成？",options:{A:"桑基圖",B:"等值線地圖",C:"折線圖",D:"泡泡圖"},answer:"C"},
+      {id:45,chapter:"distribution",question:"以下何種視覺化圖形用於展現資料中的數值及其出現的頻率，以看出特定變數其整體的形狀及其是否存在偏離的情形，助於對整體資料有初步的概念？",options:{A:"分佈視覺化",B:"排序視覺化",C:"時序視覺化",D:"離散視覺化"},answer:"A"},
+      {id:46,chapter:"distribution",question:"以下何種視覺化圖形可協助理解連續變數的分佈情況和細節，觀測資料是否為常態分佈、對稱分佈或右偏分佈等？",options:{A:"長條/柱狀圖",B:"直方圖",C:"南丁格爾玫瑰圖",D:"散佈圖"},answer:"B"},
+      {id:47,chapter:"distribution",question:"以下何種視覺化圖形同時展示資料的數值分佈情況和密度估計，更可用於比較多個組別之間的數值分佈，細緻平滑曲線展現出資料的連貫與整體感？",options:{A:"人口金字塔",B:"點狀條紋圖",C:"小提琴圖",D:"棒棒糖圖"},answer:"C"},
+      {id:48,chapter:"distribution",question:"以下何種視覺化圖形用來標示出特定數值變項之五數：最大值、Q3（第 3 四分位數）、中位數（第 2 四分位數）、Q1（第 1 四分位數）和最小值，藉此展示資料的大致分佈情形？",options:{A:"直方圖",B:"桑基圖",C:"箱形圖",D:"南丁格爾玫瑰圖"},answer:"C"},
+      {id:49,chapter:"distribution",question:"以下何種視覺化圖形用於更細緻地去比較兩對比條件在各數值區段的差異，同時並兼顧數值區段之於整體資料分佈的情形與差異？",options:{A:"等值線地圖",B:"人口金字塔",C:"流程圖",D:"棒棒糖圖"},answer:"B"},
+      {id:50,chapter:"distribution",question:"以下何種視覺化圖形主要是用來展示某特定事件不同類別資料之數值變化，或單純展現資料的最小和最大值的範圍？",options:{A:"直方圖",B:"人口金字塔",C:"箱形圖",D:"點狀圖"},answer:"D"},
+      {id:51,chapter:"distribution",question:"以下何種視覺化圖形數據以直線依序在條紋上排列於圖中，展現出多重類別的資料分佈情形？",options:{A:"二維條碼圖",B:"南丁格爾玫瑰圖",C:"等值線地圖",D:"點狀圖"},answer:"A"},
+      {id:52,chapter:"distribution",question:"以下何種視覺化圖形針對特定連續變量展示其累積分佈情況，即在某數值前有多少樣本，以及這些樣本占總體的比例？",options:{A:"桑基圖",B:"點狀條紋圖",C:"人口金字塔",D:"累積曲線圖"},answer:"D"},
+      {id:53,chapter:"distribution",question:"以下何種視覺化圖以折線圖方式呈現連續數值變數的分佈的圖表，與直方圖相比，更加平滑地呈現分佈情況，加強視覺流暢度？",options:{A:"小提琴圖",B:"人口金字塔",C:"頻率多邊圖",D:"累積曲線圖"},answer:"C"},
+      {id:54,chapter:"time",question:"下列何者不是隨時間變化圖表之特色？",options:{A:"圖表內數據一定是人數，因為只有人數跟時間有關",B:"要有時間軸，表示時間變化對資料的影響",C:"要能呈現數據趨勢，呈現數據在時間軸上的趨勢和變化",D:"因為涉及大量的數據和時間序列，因此通常需要具有不同數據間的可比較性"},answer:"A"},
+      {id:55,chapter:"time",question:"折線圖是屬於幾個資料維度的顯示方式？",options:{A:"一維",B:"三維",C:"二維",D:"多維"},answer:"C"},
+      {id:56,chapter:"compare",question:"柱狀圖是屬於幾個資料維度的顯示方式？",options:{A:"一維",B:"二維",C:"三維",D:"多維"},answer:"B"},
+      {id:57,chapter:"compare",question:"下列敘述柱狀圖(Column chart)與長條圖(Bar chart)的差異，何者為真？",options:{A:"柱狀圖將數據顯示為垂直條狀，長條圖以水平長條方式呈現數據",B:"柱狀圖將數據顯示為水平條狀，長條圖以垂直方式呈現數據",C:"長條圖適用於連續型變數，柱狀圖則否",D:"柱狀圖和長條圖都是以水平的方式呈現數據"},answer:"A"},
+      {id:58,chapter:"time",question:"折線+柱狀圖是屬於幾個資料維度的顯示方式？",options:{A:"多維",B:"二維",C:"三維",D:"一維"},answer:"C"},
+      {id:59,chapter:"time",question:"下列關於折線+柱狀圖的敘述，何者為非？",options:{A:"是由折線圖和長條圖組成",B:"兩個圖形以時間變數做連結",C:"可同步觀察兩變項之數值的變化情形，方便讀者理解與推想兩變項間的關係",D:"時間是兩圖形的重要關係"},answer:"A"},
+      {id:60,chapter:"ranking",question:"書上的坡度圖呈現的時間點有幾個？",options:{A:"一個",B:"二個",C:"三個",D:"多個"},answer:"B"},
+      {id:61,chapter:"time",question:"「重疊區域圖」希望凸顯的部分為？",options:{A:"總量數值的變化",B:"總量區域面積的百分比",C:"不同組別數值面積的重疊，可瞭解不同組別的差異",D:"斜率"},answer:"C"},
+      {id:62,chapter:"compare",question:"下列何種狀況不適合使用長條圖(橫)？",options:{A:"類別軸需要呈現多個分類類別",B:"每個類別的標題過長",C:"分類類別需要依數值進行升冪或降冪排序時",D:"資料中含有地理資訊時"},answer:"D"},
+      {id:63,chapter:"compare",question:"下列何者是成對柱狀圖的主要特點？",options:{A:"比柱狀圖的易讀性更高",B:"不適合用來展示時間序列類別",C:"成對柱狀圖多按數值大小進行升冪或降冪排列",D:"除了顯示不同類別的數值分佈進行比較，也可以同時比較在類別下不同組別之數值"},answer:"D"},
+      {id:64,chapter:"compare",question:"「由一個圓形代表資料值，一根線段代表與坐標軸的差距。」是形容哪一種視覺化圖形？",options:{A:"柱狀圖",B:"長條圖",C:"棒棒糖圖",D:"雷達圖"},answer:"C"},
+      {id:65,chapter:"compare",question:"至少需多少以上的類別變量才能繪製雷達圖？",options:{A:"一個",B:"二個",C:"三個",D:"四個"},answer:"C"},
+      {id:66,chapter:"compare",question:"下列何者不是柱狀圖的優點？",options:{A:"提供清晰的分類比較，凸顯類別間差異",B:"易於了解每個類別的相對大小",C:"簡單易懂，易於解讀圖表意涵",D:"當類別數很多時，仍然容易判讀"},answer:"D"},
+      {id:67,chapter:"tools",question:"下列哪一個圖形在 Power BI 內未有預設內建的視覺效果？",options:{A:"柱狀圖",B:"長條圖",C:"棒棒糖圖",D:"成對長條圖"},answer:"C"},
+      {id:68,chapter:"compare",question:"下列哪一個在實務上較少用來比較的資料量值？",options:{A:"次數",B:"數量",C:"金額",D:"心理感受"},answer:"D"},
+      {id:69,chapter:"partwhole",question:"想瞭解個別成分的大小，較適合使用哪類圖形來展現資料的特性？",options:{A:"離散差異圖表",B:"分佈視覺化圖表",C:"量比較圖表",D:"部分和整體關係圖表"},answer:"D"},
+      {id:70,chapter:"partwhole",question:"最常被使用來呈現部分與整體關係的圖形指的是以下何者？",options:{A:"凹凸線圖",B:"累積曲線圖",C:"甜甜圈圖",D:"旭日圖"},answer:"C"},
+      {id:71,chapter:"partwhole",question:"以下哪一個圖形又稱為華夫餅圖（Waffle Chart）？",options:{A:"凹凸線圖",B:"散布圖",C:"樹狀圖",D:"網格圖"},answer:"D"},
+      {id:72,chapter:"partwhole",question:"下列哪一個圖形的名稱來自於芬蘭的時尚家居公司的名字？",options:{A:"長條圖",B:"旭日圖",C:"比例堆疊條形圖",D:"網格圖"},answer:"C"},
+      {id:73,chapter:"partwhole",question:"圓餅圖與甜甜圈是利用圓形來呈現部分的類別和整體的關係。所以類別的數量多少較為合宜？",options:{A:"1~3",B:"3~9",C:"2~10",D:"2~6"},answer:"D"},
+      {id:74,chapter:"partwhole",question:"若是要追求數據視覺化表達的準確性時，下列何種圖形將無法精準表示數據的精準數值，且會有誇大的效果？",options:{A:"樹狀圖",B:"南丁格爾玫瑰圖",C:"二維條碼圖",D:"堆疊圖"},answer:"B"},
+      {id:75,chapter:"partwhole",question:"使用 100 個正方形表示整體，所以可以根據每一個類別其部分與整體的關係進行著色是下列何種圖形的特色？",options:{A:"甜甜圈圖",B:"旭日圖",C:"比例堆疊條形圖",D:"網格圖"},answer:"D"},
+      {id:76,chapter:"spatial",question:"資料中的精確位置和地理分佈規則比其他資訊對讀者來說更重要時，較適合使用何類圖表？",options:{A:"離散差異圖表",B:"空間視覺化圖表",C:"量比較圖表",D:"部分和整體關係圖表"},answer:"B"},
+      {id:77,chapter:"spatial",question:"關於物體、事件或現象在地球表面的位置資訊是屬於哪一類資料？",options:{A:"空間資料",B:"歷史資料",C:"數學資料",D:"化學資料"},answer:"A"},
+      {id:78,chapter:"spatial",question:"收集、管理、分析和對應地理空間資料的電腦專用系統或軟體，指的是？",options:{A:"全球定位系統",B:"飛航管理系統",C:"地理資訊系統",D:"導航系統"},answer:"C"},
+      {id:79,chapter:"spatial",question:"與自然地理現象有關。這些包括氣候（天氣和溫度）、潮汐、海拔、地震活動和動植物棲息地或遷徙模式，指的是何種資料？",options:{A:"環境資料",B:"物理資料",C:"數位資料",D:"人口統計資料"},answer:"A"},
+      {id:80,chapter:"spatial",question:"匯總的人口數量，以及有關其中人員特徵的資訊，這些包括性別、年齡、收入、住房成本等，指的是何種資料？",options:{A:"人口統計資料",B:"環境資料",C:"影像資料",D:"虛構資料"},answer:"A"},
+      {id:81,chapter:"spatial",question:"Edmund Halley（1701）開發了在坐標網格的地圖上，結合了磁場分佈的地理繪圖，這是哪一種圖形的第一次展現？",options:{A:"棒棒糖圖",B:"南丁格爾玫瑰圖",C:"泡泡圖",D:"等值線地圖"},answer:"D"},
+      {id:82,chapter:"flow",question:"以下何種圖形適合用來向讀者展示兩個或兩個以上的狀態、情境之間的流動量或流動強度。這裡的狀態、情境可能是邏輯關係或地理位置？",options:{A:"流向視覺化",B:"離散差異之視覺化",C:"分佈之視覺化",D:"關聯性之視覺化"},answer:"A"},
+      {id:83,chapter:"flow",question:"以下何者不屬於流向視覺化之圖表？",options:{A:"桑基圖",B:"和絃圖",C:"雷達圖",D:"網路圖"},answer:"C"},
+      {id:84,chapter:"flow",question:"哪一種圖形所使用的資料，需要包含起迄點的關係，並且以線條的粗細來表示數字的大小？",options:{A:"流向視覺化",B:"關聯性之視覺化",C:"分佈之視覺化",D:"離散差異之視覺化"},answer:"A"},
+      {id:85,chapter:"flow",question:"處理流程（process）或工作流程（workflow）的圖表。它使用了特定圖形符號來表示解決問題的步驟和程式，並藉由箭頭連接的方向來顯示它們的執行順序的圖形是下列何者？",options:{A:"瀑布圖",B:"流程圖",C:"桑基圖",D:"和絃圖"},answer:"B"},
+      {id:86,chapter:"flow",question:"在流程圖中，使用矩形代表何種意義？",options:{A:"處理流程",B:"思考中",C:"延遲",D:"準備或啟動"},answer:"A"},
+      {id:87,chapter:"flow",question:"在流程圖中，使用平行四邊形代表何種意義？",options:{A:"資料的產生",B:"手動輸入",C:"運算進行中",D:"展示"},answer:"A"},
+      {id:88,chapter:"flow",question:"在流程圖中，使用菱形代表何種意義？",options:{A:"抉擇",B:"聚集點符號",C:"替代流程",D:"延遲"},answer:"A"},
+      {id:89,chapter:"flow",question:"適合像我們呈現從某一種狀態（或類別），到下一個狀態（或類別）時，數量的增減變化情形。也可以表現一個資料中的群聚與分散的狀態；亦或是說明一個解決問題的步驟和程式的圖形是哪一類？",options:{A:"分佈之視覺化",B:"離散差異之視覺化",C:"流向視覺化",D:"關聯性之視覺化"},answer:"C"},
+      {id:90,chapter:"dataCase",question:"下列選項中，何處是可以下載「歷年來台旅客統計」資料集的地方？",options:{A:"疾病管制署資料開放平台",B:"台北市政府資料開放平台",C:"數位發展部政府資料開放平台",D:"教育部體育署開放資料集"},answer:"C"},
+      {id:91,chapter:"dataCase",question:"下咧哪個網址是政府資料開放平台？",options:{A:"https://data.gov.tw/",B:"https://www.gotop.com.tw/",C:"https://www.edu.tw/",D:"https://www.kaggle.com/"},answer:"A"},
+      {id:92,chapter:"tools",question:"如何將 CSV 格式的資料集匯入 Power BI，下列何者為正確？",options:{A:"從【常用】工具列下的【取得資料】，選擇【文字/CSV】，進行匯入",B:"從【常用】工具列下的【Excel 活頁簿】，進行匯入",C:"從【常用】工具列下的【輸入資料】，進行匯入",D:"從【插入】工具列下的【文字方塊】，進行匯入"},answer:"A"},
+      {id:93,chapter:"dataCase",question:"在課本的案例中，視覺效果中的「卡片」是用來呈現那一種內容？",options:{A:"呈現篩選的維度",B:"呈現重要計量，例如「來台人數」",C:"呈現使用的視覺效果名稱",D:"呈現儀錶板名稱"},answer:"B"},
+      {id:94,chapter:"dataCase",question:"從歷年來台旅客統計資料集的實作練習中發現 2019 年與 2020 年旅客來台人數呈現斷崖式下跌，推論原因為何？",options:{A:"因為川普連任失敗",B:"因為新冠疫情全球大流行",C:"因為日圓貶值",D:"因為台幣升值"},answer:"B"},
+      {id:95,chapter:"dataCase",question:"從歷年來台旅客來台目的統計資料集的實作練習中發現，2012 年至 2019 年旅客來台目的中，以觀光目的來台之旅客約佔整體旅客的百分比約略為多少？",options:{A:"0.15",B:"0.3",C:"0.9",D:"0.7"},answer:"D"},
+      {id:96,chapter:"dataCase",question:"從歷年來台旅客居住地統計的儀表板實作練習中發現，2021 年至 2022 年來台旅客的居住地中，以哪個地方為最多？",options:{A:"芬蘭",B:"日本",C:"冰島",D:"越南"},answer:"D"},
+      {id:97,chapter:"intro",question:"資料視覺化，是讓讀者從何處獲得資料所傳達的訊息，並呈現出資料的特性？",options:{A:"圖畫",B:"文字",C:"聲音",D:"味道"},answer:"A"},
+      {id:98,chapter:"intro",question:"下列哪一項最能區分「資料視覺化（Data Visualization）」與「資訊圖表（Infographic）」的主要特性？",options:{A:"是否為互動式呈現",B:"是否使用統計資料",C:"是否能夠自動產製及更新",D:"是否具有主觀立場"},answer:"C"},
+      {id:99,chapter:"intro",question:"根據 Iliinsky & Steele（2011），何者最符合「資訊圖表」的特性？",options:{A:"常用於客觀分析資料趨勢",B:"利用大量資料呈現多維資訊",C:"著重設計感與吸睛效果，傳遞特定訊息",D:"使用演算法快速處理多筆資料"},answer:"C"},
+      {id:100,chapter:"intro",question:"下列哪一項不是資料視覺化的主要優點？",options:{A:"易於重製與更新",B:"能有效處理大量資料",C:"美學設計程度高",D:"適合觀察資料趨勢與規律"},answer:"C"},
+      {id:101,chapter:"intro",question:"若一個圖表是使用 Adobe Illustrator 手動繪製，並且用於呈現特定議題的故事或觀點，最適合被歸類為？",options:{A:"資料視覺化（Data Visualization）",B:"資訊圖表（Infographic）",C:"資料地圖（Data Map）",D:"動態圖像（Dynamic Graphic）"},answer:"B"},
+      {id:102,chapter:"intro",question:"資料視覺化中所提及的「三個角色」不包含以下哪一項？",options:{A:"接收者（Receiver）",B:"資料工程師（Data Engineer）",C:"資料科學家（Data Scientist）",D:"原始資料（Raw Data）"},answer:"B"},
+      {id:103,chapter:"intro",question:"1831 年 10 月，英國開始遭受霍亂（cholera）疫情肆虐。約翰‧斯諾（John Snow）在霍亂疫情中扮演的關鍵角色為何？",options:{A:"發明霍亂疫苗並在倫敦推廣接種",B:"繪製點圖以揭示霍亂與水井污染的關聯",C:"設計醫院空氣淨化系統防止疾病擴散",D:"發展時間序列圖以追蹤霍亂發展趨勢"},answer:"B"},
+      {id:104,chapter:"intro",question:"下列哪一項圖形技術或圖表形式不是在 19 世紀上半葉所發明的？",options:{A:"長條圖與圓餅圖",B:"時間序列圖與折線圖",C:"雷達圖與熱力圖",D:"散佈圖與等高線圖"},answer:"C"},
+      {id:105,chapter:"intro",question:"以下哪一項不是推動 1975 年後資料視覺化發展的重要因素？",options:{A:"擴充傳統統計模型至更複雜的應用",B:"開源與商業圖形軟體的大量應用",C:"雲端技術與數位媒體的普及",D:"純手繪圖形與印刷圖表的復興"},answer:"D"},
+      {id:106,chapter:"intro",question:"關於資料視覺化在探索式資料分析（EDA）中的角色，下列敘述何者正確？",options:{A:"資料視覺化僅在資料清理完成後才適用",B:"資料視覺化主要用於資料儲存與備份",C:"資料視覺化有助於初步理解資料的結構與特徵",D:"資料視覺化主要用來創作圖像敘事與主題故事"},answer:"C"},
+      {id:107,chapter:"intro",question:"下列關於「資料視覺化」與「資訊圖表」的敘述，何者正確？",options:{A:"資訊圖表通常較客觀，強調讓讀者自己解釋資料",B:"資料視覺化通常為主觀創作，著重故事性",C:"資料視覺化強調資料探索與客觀呈現；資訊圖表較常帶有設計導向與主題訊息",D:"兩者沒有任何差異，只是名稱不同"},answer:"C"},
+      {id:108,chapter:"color",question:"下列哪一組顏色為色環中的「互補色」組合？",options:{A:"藍色與綠色",B:"紅色與綠色",C:"黃色與橙色",D:"紫色與藍色"},answer:"B"},
+      {id:109,chapter:"color",question:"在色彩學中，當某一色相加入「灰色」後所產生的顏色稱為什麼？",options:{A:"淺色（Tints）",B:"色調（Tones）",C:"色度（Shades）",D:"色環（Color Wheel）"},answer:"B"},
+      {id:110,chapter:"color",question:"根據色彩與心理的關係，下列敘述何者正確？",options:{A:"藍色能激發情緒與興奮，屬於暖色系",B:"紅色給人冷靜、安定的感受",C:"橙色、黃色屬於冷色系，具沉穩感",D:"藍色屬於冷色系，常與放鬆感相關"},answer:"D"},
+      {id:111,chapter:"tools",question:"關於 Excel 的發展歷史與應用，下列敘述何者正確？",options:{A:"Excel 最早於 1921 年推出於 Windows 系統",B:"Excel 的主要功能為文字處理與簡報設計",C:"Excel 是第一個具有圖形介面的試算表軟體",D:"Excel 的欄是以羅馬數字排列，列是以希臘字母排列"},answer:"C"},
+      {id:112,chapter:"tools",question:"下列關於 Microsoft Power BI 的敘述，何者正確？",options:{A:"Power BI 是以 Excel 增益集形式存在，無法單獨安裝",B:"Power BI 僅能使用本機端資料來源，無法連接雲端",C:"Power BI 支援 ETL 流程，能擷取、轉換並載入資料",D:"Power BI 僅限於 Windows 作業系統，無行動應用程式版本"},answer:"C"},
+      {id:113,chapter:"tools",question:"若一家公司希望能大量儲存資料、跨地區部署，並享有進階AI分析功能，最適合使用下列哪一種 Power BI 版本？",options:{A:"Power BI Desktop",B:"Power BI Pro",C:"Power BI Premium",D:"Power BI Excel Add-in"},answer:"C"},
+      {id:114,chapter:"tools",question:"關於 Power BI 中的「量值（Measure）」欄位，下列敘述何者正確？",options:{A:"量值欄位無法進行加總或平均等運算",B:"量值欄位通常為文字型欄位，標示客戶屬性",C:"量值欄位是指用於描述分類特徵的屬性",D:"量值欄位用來呈現數值資訊並支援聚合與比較"},answer:"D"},
+      {id:115,chapter:"tools",question:"在 Power BI 的資料建模中，主鍵（Primary Key）應具備哪些特性？",options:{A:"可以重複且可以為空值",B:"必須唯一且每筆資料都要有值",C:"必須為文字格式欄位",D:"必須為其他資料表的外鍵"},answer:"B"},
+      {id:116,chapter:"tools",question:"若一位顧客可以購買多樣商品，而每樣商品也可以被多位顧客購買，這在資料模型中屬於哪種類型的關聯？",options:{A:"一對一（One to One）",B:"一對多（One to Many）",C:"多對一（Many to One）",D:"多對多（Many to Many）"},answer:"D"},
+      {id:117,chapter:"compare",question:"在離散差異視覺化圖表中，何種圖表最適合用來顯示「不同產品類別相對於參照值（如 0 元）之獲利差異」？",options:{A:"成對長條圖（Spine）",B:"分向堆疊長條圖（Diverging stacked bar）",C:"分向長條圖（Diverging bar）",D:"損益線圖（Surplus/deficit filled line）"},answer:"C"},
+      {id:118,chapter:"compare",question:"若要以視覺化方式比較「不同國家男女平均薪資差異」，下列哪種圖表最合適？",options:{A:"分向堆疊長條圖（Diverging stacked bar）",B:"損益線圖（Surplus/deficit filled line）",C:"成對長條圖（Spine）",D:"分向長條圖（Diverging bar）"},answer:"C"},
+      {id:119,chapter:"correlation",question:"若想呈現「不同年度男女就業比率的變化趨勢」，且需觀察隨時間的變化走向，下列何者為最佳圖表選擇？",options:{A:"XY 熱圖（XY Heatmap）",B:"成對長條圖（Spine Chart）",C:"連接散佈圖（Connected Scatterplot）",D:"泡泡圖（Bubble Chart）"},answer:"C"},
+      {id:120,chapter:"correlation",question:"下列關於泡泡圖（Bubble Chart）的敘述，何者正確？",options:{A:"泡泡圖只能呈現兩個變數間的關聯性",B:"泡泡圖不適合使用顏色表達類別變項",C:"泡泡圖可同時表現出三個以上變數的資訊",D:"泡泡圖適合展示資料的細微差異與絕對值大小"},answer:"C"},
+      {id:121,chapter:"ranking",question:"下列關於「排序比例符號圖（Ordered proportional symbol）」的敘述，何者正確？",options:{A:"適合展示數據之間的細微差異",B:"利用圓形大小呈現排序，視覺有趣但不適合精確比較",C:"使用橫條與數值標籤清楚標示所有排名",D:"僅適用於二維時間序列資料"},answer:"B"},
+      {id:122,chapter:"distribution",question:"下列關於直方圖（Histogram）與箱形圖（Boxplot）的敘述，何者正確？",options:{A:"直方圖與箱形圖皆以類別變數為X軸呈現",B:"箱形圖可呈現數值變數的分佈曲線，優於直方圖",C:"直方圖適合用於觀察單一連續數值變項的分佈情形",D:"箱形圖比直方圖更適合處理時間序列資料"},answer:"C"},
+      {id:123,chapter:"distribution",question:"哪一種圖表最適合用來比較兩種對比類別（如性別）在不同年齡區間的分佈情形？",options:{A:"小提琴圖（Violin plot）",B:"累積曲線圖（Cumulative curve）",C:"點狀條紋圖（Dot strip plot）",D:"人口金字塔圖（Population pyramid）"},answer:"D"},
+      {id:124,chapter:"distribution",question:"若需展示所有個別觀測資料點的數值分佈情形，且每筆資料皆需在圖上呈現，以下哪種圖表最合適？",options:{A:"點狀條紋圖（Dot strip plot）",B:"箱形圖（Boxplot）",C:"累積曲線圖（Cumulative curve）",D:"頻率多邊圖（Frequency polygons）"},answer:"A"},
+      {id:125,chapter:"time",question:"當你想要同時呈現「每月銷售額（數值）」與「利潤率（百分比）」的時間變化趨勢時，最適合使用哪一種圖表？",options:{A:"區域圖（Area chart）",B:"折線+柱狀圖（Line + Column chart）",C:"坡度圖（Slope chart）",D:"折線圖（Line chart）"},answer:"B"},
+      {id:126,chapter:"time",question:"關於區域圖（Area chart）的敘述，何者錯誤？",options:{A:"區域圖是以填色方式強化折線圖的數據大小感受",B:"區域圖適合比較不同類別資料的變化與總體趨勢",C:"區域圖可清楚辨識每組細部資料的精確數值",D:"區域圖具有強烈的視覺效果但可能造成混淆"},answer:"C"},
+      {id:127,chapter:"compare",question:"以下何者圖表最適合用來比較同一類別中不同群組的數值，例如比較各地區每季的銷售量？",options:{A:"長條圖（Bar Chart）",B:"雷達圖（Radar Chart）",C:"成對柱狀圖（Paired Column Chart）",D:"象形圖（Pictogram）"},answer:"C"},
+      {id:128,chapter:"compare",question:"若欲以圖像符號呈現人口、社會、經濟等資料，並希望提升視覺吸引力，最適合使用下列哪一種圖表？",options:{A:"柱狀圖（Column Chart）",B:"象形圖（Pictogram）",C:"棒棒糖圖（Lollipop Chart）",D:"成對長條圖（Paired Bar Chart）"},answer:"B"},
+      {id:129,chapter:"compare",question:"關於雷達圖的敘述，下列何者正確？",options:{A:"適合呈現時間序列變化的趨勢資料",B:"不建議用於任何需要順序性排列的類別資料",C:"適合比較各構面變量的分佈與強弱，例如評估五大人格特質",D:"只能呈現兩個變量之間的關係"},answer:"C"},
+      {id:130,chapter:"partwhole",question:"有關圓餅圖的使用，下列敘述何者正確？",options:{A:"可用於大量類別資料，資訊表達更清楚",B:"圖形可不必總和為100%，強調的是個別差異",C:"適合用來呈現佔比明顯差異的小類別項目",D:"適合呈現少量類別、強調單一類別占比"},answer:"D"},
+      {id:131,chapter:"partwhole",question:"關於堆疊長條圖與100%堆疊長條圖的差異，下列敘述何者正確？",options:{A:"堆疊長條圖可呈現百分比，100%堆疊則用於實際數量",B:"堆疊長條圖無法比較總量，100%堆疊圖可呈現總量",C:"堆疊長條圖顯示實際數值，100%堆疊圖呈現相對百分比",D:"兩者都只能用於一個類別變數"},answer:"C"},
+      {id:132,chapter:"spatial",question:"以下關於比例象徵地圖的敘述，何者正確？",options:{A:"通常用來表示標準化比率資料，如人口密度",B:"圖形元素的大小與資料值無關",C:"常使用圓圈或長條圖來顯示資料數值的大小",D:"無法應用於地圖上疊加其他視覺元素"},answer:"C"},
+      {id:133,chapter:"spatial",question:"當你希望了解人們從一個地點移動到另一地點的流動趨勢與數量，應使用哪一種地圖最合適？",options:{A:"等高線地圖（Contour map）",B:"分層設色圖（Choropleth map）",C:"流向地圖（Flow map）",D:"點狀密度地圖（Dot density map）"},answer:"C"},
+      {id:134,chapter:"flow",question:"下列哪一種圖表最適合用來呈現學生在學期間的修課順序與先後關係？",options:{A:"和絃圖（Chord Graph）",B:"瀑布圖（Waterfall Plot）",C:"網路圖（Network Diagram）",D:"流程圖（Flow Chart）"},answer:"C"},
+      {id:135,chapter:"flow",question:"有一份資料顯示一間企業的年度總收入為10億元，其支出項目依序為薪資4億、設備投資3億、行銷1億、研發2億，若要視覺化表示這些金流去向的比例關係，最適合使用哪一種圖表？",options:{A:"和絃圖（Chord Graph）",B:"流程圖（Flow Chart）",C:"瀑布圖（Waterfall Plot）",D:"桑基圖（Sankey Diagram）"},answer:"D"}
+    ];
+
+    const chapterSelect = document.getElementById("chapterSelect");
+    const modeSelect = document.getElementById("modeSelect");
+    const startBtn = document.getElementById("startBtn");
+    const clearWrongBtn = document.getElementById("clearWrongBtn");
+
+    const totalEl = document.getElementById("total");
+    const rateEl = document.getElementById("rate");
+    const answeredEl = document.getElementById("answered");
+    const mTotalEl = document.getElementById("mTotal");
+    const mRateEl = document.getElementById("mRate");
+    const mAnsweredEl = document.getElementById("mAnswered");
+
+    const modeBadge = document.getElementById("modeBadge");
+    const metaText = document.getElementById("metaText");
+    const statusLine = document.getElementById("statusLine");
+    const progressLeft = document.getElementById("progressLeft");
+    const progressRight = document.getElementById("progressRight");
+    const progressBar = document.getElementById("progressBar");
+    const chapterTag = document.getElementById("chapterTag");
+    const questionNoText = document.getElementById("questionNoText");
+    const questionText = document.getElementById("questionText");
+    const optionsBox = document.getElementById("optionsBox");
+    const feedbackBox = document.getElementById("feedbackBox");
+    const feedbackStatus = document.getElementById("feedbackStatus");
+    const feedbackDesc = document.getElementById("feedbackDesc");
+    const qnav = document.getElementById("qnav");
+    const navMeta = document.getElementById("navMeta");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const mPrevBtn = document.getElementById("mPrevBtn");
+    const mNextBtn = document.getElementById("mNextBtn");
+    const mSubmitBtn = document.getElementById("mSubmitBtn");
+
+    const quizWrap = document.getElementById("quizWrap");
+    const resultWrap = document.getElementById("resultWrap");
+    const finalScore = document.getElementById("finalScore");
+    const finalText = document.getElementById("finalText");
+    const reviewBtn = document.getElementById("reviewBtn");
+    const restartExamBtn = document.getElementById("restartExamBtn");
+    const backPracticeBtn = document.getElementById("backPracticeBtn");
+
+    const state = {
+      mode: "sequential",
+      chapter: "all",
+      list: [],
+      index: 0,
+      picked: {},
+      results: {},
+      submitted: false,
+      reviewMode: false,
+      wrongIds: loadWrongIds()
+    };
+
+    function loadWrongIds(){
+      try{
+        return JSON.parse(localStorage.getItem("visualQuizWrongIds") || "[]");
+      }catch(e){
+        return [];
+      }
+    }
+
+    function saveWrongIds(){
+      localStorage.setItem("visualQuizWrongIds", JSON.stringify([...new Set(state.wrongIds)]));
+    }
+
+    function isExamMode(){
+      return ["exam20","exam50","exam100"].includes(state.mode);
+    }
+
+    function examCount(mode){
+      if(mode === "exam20") return 20;
+      if(mode === "exam50") return 50;
+      if(mode === "exam100") return 100;
+      return 0;
+    }
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function buildChapterOptions(){
+      Object.entries(chapters).forEach(([key,name])=>{
+        const op = document.createElement("option");
+        op.value = key;
+        op.textContent = name;
+        chapterSelect.appendChild(op);
+      });
+    }
+
+    function filterByChapter(list){
+      if(state.chapter === "all") return [...list];
+      return list.filter(q => q.chapter === state.chapter);
+    }
+
+    function buildList(){
+      let base = filterByChapter(questionBank);
+
+      if(state.mode === "wrongOnly"){
+        base = base.filter(q => state.wrongIds.includes(q.id));
+      }
+
+      if(state.mode === "random"){
+        base = shuffle(base);
+      }
+
+      if(isExamMode()){
+        const count = examCount(state.mode);
+        base = shuffle(base).slice(0, Math.min(count, base.length));
+      }
+
+      if(state.mode === "sequential"){
+        base = [...base].sort((a,b)=>a.id-b.id);
+      }
+
+      return base;
+    }
+
+    function startQuiz(){
+      state.mode = modeSelect.value;
+      state.chapter = chapterSelect.value;
+      state.list = buildList();
+      state.index = 0;
+      state.picked = {};
+      state.results = {};
+      state.submitted = false;
+      state.reviewMode = false;
+
+      resultWrap.classList.remove("show");
+      quizWrap.style.display = "block";
+
+      if(state.list.length === 0){
+        modeBadge.textContent = "無可用題目";
+        metaText.textContent = "目前條件下沒有題目可顯示";
+        questionText.textContent = "請更換模式或章節後再試一次。";
+        questionNoText.textContent = "第 0 題";
+        chapterTag.textContent = "章節：無";
+        optionsBox.innerHTML = "";
+        feedbackBox.classList.remove("show");
+        qnav.innerHTML = "";
+        statusLine.classList.add("show");
+        statusLine.textContent = "目前沒有符合條件的題目。若選擇錯題複習，請先累積錯題。";
+        updateStats();
+        updateNavButtons();
+        updateSubmitButtons();
+        updateProgress();
+        return;
+      }
+
+      statusLine.classList.remove("show");
+      render();
+    }
+
+    function getCurrentQuestion(){
+      return state.list[state.index];
+    }
+
+    function getModeName(){
+      const map = {
+        sequential: "順序練習",
+        random: "隨機練習",
+        exam20: "模擬測驗（20 題）",
+        exam50: "模擬測驗（50 題）",
+        exam100: "模擬測驗（100 題）",
+        wrongOnly: "錯題複習"
+      };
+      return map[state.mode] || state.mode;
+    }
+
+    function updateStats(){
+      const answered = Object.keys(state.picked).length;
+      const correct = Object.values(state.results).filter(v => v === true).length;
+      const rate = (isExamMode() && !state.submitted)
+        ? 0
+        : (answered ? Math.round(correct / answered * 100) : 0);
+      const total = state.list.length;
+
+      totalEl.textContent = total;
+      rateEl.textContent = rate + "%";
+      answeredEl.textContent = answered + " / " + total;
+
+      mTotalEl.textContent = total;
+      mRateEl.textContent = rate + "%";
+      mAnsweredEl.textContent = answered + " / " + total;
+    }
+
+    function updateProgress(){
+      const total = state.list.length || 0;
+      const current = total ? state.index + 1 : 0;
+      const answered = Object.keys(state.picked).length;
+      const remain = Math.max(total - answered, 0);
+      const percent = total ? Math.round(current / total * 100) : 0;
+
+      progressLeft.textContent = "第 " + current + " 題";
+      progressRight.textContent = "剩餘 " + remain + " 題";
+      progressBar.style.width = percent + "%";
+      navMeta.textContent = "已答 " + answered + " / " + total;
+    }
+
+    function updateNavButtons(){
+      const total = state.list.length;
+      const atFirst = state.index <= 0;
+      const atLast = state.index >= total - 1 || total === 0;
+
+      prevBtn.disabled = atFirst;
+      mPrevBtn.disabled = atFirst;
+      nextBtn.disabled = atLast;
+      mNextBtn.disabled = atLast;
+
+      prevBtn.style.opacity = atFirst ? ".55" : "1";
+      mPrevBtn.style.opacity = atFirst ? ".55" : "1";
+      nextBtn.style.opacity = atLast ? ".55" : "1";
+      mNextBtn.style.opacity = atLast ? ".55" : "1";
+    }
+
+    function updateSubmitButtons(){
+      const showSubmit = isExamMode() && !state.submitted;
+      submitBtn.style.display = showSubmit ? "inline-block" : "none";
+      mSubmitBtn.style.display = showSubmit ? "inline-block" : "none";
+    }
+
+    function saveWrongQuestion(id){
+      if(!state.wrongIds.includes(id)){
+        state.wrongIds.push(id);
+        saveWrongIds();
+      }
+    }
+
+    function removeWrongQuestion(id){
+      if(state.wrongIds.includes(id)){
+        state.wrongIds = state.wrongIds.filter(x => x !== id);
+        saveWrongIds();
+      }
+    }
+
+    function clearWrongQuestions(){
+      const ok = confirm("確定要清除所有錯題紀錄嗎？");
+      if(!ok) return;
+      state.wrongIds = [];
+      saveWrongIds();
+      if(state.mode === "wrongOnly"){
+        startQuiz();
+      }else{
+        renderStatusTemporary("已清除所有錯題紀錄。");
+      }
+    }
+
+    function renderStatusTemporary(text){
+      statusLine.classList.add("show");
+      statusLine.textContent = text;
+      setTimeout(()=>{
+        if(isExamMode() && !state.submitted){
+          const answered = Object.keys(state.picked).length;
+          statusLine.classList.add("show");
+          statusLine.textContent = "模擬測驗進行中：交卷前不顯示正確率，已作答 " + answered + " 題。";
+        }else if(state.mode === "wrongOnly"){
+          statusLine.classList.add("show");
+          statusLine.textContent = "錯題複習模式：系統會保留你答錯過的題目。";
+        }else{
+          statusLine.classList.remove("show");
+        }
+      }, 1500);
+    }
+
+    function answerQuestion(choice){
+      const q = getCurrentQuestion();
+      if(!q) return;
+      if(isExamMode() && state.submitted) return;
+
+      state.picked[q.id] = choice;
+
+      if(isExamMode()){
+        if(state.submitted){
+          state.results[q.id] = (choice === q.answer);
+        }
+      }else{
+        const isCorrect = choice === q.answer;
+        state.results[q.id] = isCorrect;
+        if(isCorrect){
+          removeWrongQuestion(q.id);
+        }else{
+          saveWrongQuestion(q.id);
+        }
+      }
+
+      render();
+    }
+
+    function submitExam(){
+      state.submitted = true;
+
+      state.list.forEach(q=>{
+        const picked = state.picked[q.id];
+        const isCorrect = picked === q.answer;
+        state.results[q.id] = isCorrect;
+        if(isCorrect){
+          removeWrongQuestion(q.id);
+        }else{
+          saveWrongQuestion(q.id);
+        }
+      });
+
+      const total = state.list.length;
+      const correct = Object.values(state.results).filter(v => v === true).length;
+      const score = total ? Math.round(correct / total * 100) : 0;
+
+      finalScore.textContent = score + "%";
+      finalText.textContent = "本次共 " + total + " 題，答對 " + correct + " 題";
+      quizWrap.style.display = "none";
+      resultWrap.classList.add("show");
+      updateStats();
+    }
+
+    function renderFeedback(q){
+      const picked = state.picked[q.id];
+      const hasAnswered = picked !== undefined;
+
+      if(!hasAnswered){
+        feedbackBox.classList.remove("show");
+        return;
+      }
+
+      if(isExamMode() && !state.submitted){
+        feedbackBox.classList.remove("show");
+        return;
+      }
+
+      const isCorrect = state.results[q.id] === true;
+      feedbackBox.classList.add("show");
+      feedbackStatus.innerHTML = isCorrect
+        ? '<span class="ok">答對了！正確答案：' + q.answer + "</span>"
+        : '<span class="bad">答錯了，正確答案：' + q.answer + "</span>";
+      feedbackDesc.textContent = "你的答案：" + picked + "｜題目章節：" + (chapters[q.chapter] || q.chapter);
+    }
+
+    function renderOptions(q){
+      optionsBox.innerHTML = "";
+      const picked = state.picked[q.id];
+      const showAnswer = !isExamMode() || state.submitted;
+
+      Object.entries(q.options).forEach(([key,text])=>{
+        const div = document.createElement("div");
+        div.className = "option";
+
+        if(picked === key){
+          div.classList.add("selected");
+        }
+
+        if(showAnswer){
+          if(key === q.answer){
+            div.classList.add("correct");
+          }else if(picked === key && picked !== q.answer){
+            div.classList.add("wrong");
+          }
+        }
+
+        if(isExamMode() && state.submitted){
+          div.classList.add("disabled");
+        }
+
+        div.innerHTML = '<div class="option-key">' + key + '</div><div class="option-text">' + text + '</div>';
+        div.addEventListener("click", ()=>answerQuestion(key));
+        optionsBox.appendChild(div);
+      });
+    }
+
+    function renderQnav(){
+      qnav.innerHTML = "";
+      state.list.forEach((q,idx)=>{
+        const btn = document.createElement("button");
+        btn.className = "qnum";
+        btn.textContent = idx + 1;
+
+        if(idx === state.index) btn.classList.add("current");
+
+        const picked = state.picked[q.id];
+        if(picked !== undefined){
+          if((!isExamMode() || state.submitted) && state.results[q.id] === true){
+            btn.classList.add("right");
+          }else if((!isExamMode() || state.submitted) && state.results[q.id] === false){
+            btn.classList.add("wrong");
+          }else{
+            btn.classList.add("answered");
+          }
+        }
+
+        btn.addEventListener("click", ()=>{
+          state.index = idx;
+          render();
+        });
+        qnav.appendChild(btn);
+      });
+    }
+
+    function render(){
+      const q = getCurrentQuestion();
+      if(!q) return;
+
+      modeBadge.textContent = getModeName();
+      metaText.textContent = "目前題庫 " + state.list.length + " 題";
+      chapterTag.textContent = "章節：" + (chapters[q.chapter] || q.chapter);
+      questionNoText.textContent = "第 " + (state.index + 1) + " 題 / 共 " + state.list.length + " 題";
+      questionText.textContent = q.question;
+
+      renderOptions(q);
+      renderFeedback(q);
+      renderQnav();
+      updateStats();
+      updateProgress();
+      updateNavButtons();
+      updateSubmitButtons();
+
+      if(isExamMode() && !state.submitted){
+        const answered = Object.keys(state.picked).length;
+        statusLine.classList.add("show");
+        statusLine.textContent = "模擬測驗進行中：交卷前不顯示正確率，已作答 " + answered + " 題。";
+      }else if(state.mode === "wrongOnly"){
+        statusLine.classList.add("show");
+        statusLine.textContent = "錯題複習模式：系統會保留你答錯過的題目。";
+      }else{
+        statusLine.classList.remove("show");
+      }
+    }
+
+    function goPrev(){
+      if(state.index > 0){
+        state.index--;
+        render();
+      }
+    }
+
+    function goNext(){
+      if(state.index < state.list.length - 1){
+        state.index++;
+        render();
+      }
+    }
+
+    function backToReview(){
+      resultWrap.classList.remove("show");
+      quizWrap.style.display = "block";
+      state.reviewMode = true;
+      state.index = 0;
+      render();
+    }
+
+    function restartExam(){
+      startQuiz();
+    }
+
+    function backPractice(){
+      modeSelect.value = "sequential";
+      state.mode = "sequential";
+      startQuiz();
+    }
+
+    buildChapterOptions();
+    updateStats();
+    updateProgress();
+    updateNavButtons();
+    updateSubmitButtons();
+
+    startBtn.addEventListener("click", startQuiz);
+    clearWrongBtn.addEventListener("click", clearWrongQuestions);
+    prevBtn.addEventListener("click", goPrev);
+    nextBtn.addEventListener("click", goNext);
+    mPrevBtn.addEventListener("click", goPrev);
+    mNextBtn.addEventListener("click", goNext);
+    submitBtn.addEventListener("click", submitExam);
+    mSubmitBtn.addEventListener("click", submitExam);
+    reviewBtn.addEventListener("click", backToReview);
+    restartExamBtn.addEventListener("click", restartExam);
+    backPracticeBtn.addEventListener("click", backPractice);
+  </script>
+</body>
+</html>
