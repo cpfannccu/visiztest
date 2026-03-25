@@ -54,12 +54,6 @@
       line-height:1.2;
     }
 
-    .sub{
-      color:var(--muted);
-      margin-top:6px;
-      font-size:14px;
-    }
-
     .stats{
       display:flex;
       gap:10px;
@@ -116,6 +110,14 @@
       padding:12px;
       background:#fff;
       color:var(--text);
+    }
+
+    .toolbar-actions{
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
     .btn{
@@ -499,6 +501,12 @@
         padding:8px 12px;
         font-size:13px;
         border-radius:10px;
+        min-width:96px;
+      }
+
+      .toolbar-actions{
+        justify-content:center;
+        gap:8px;
       }
 
       .panel{
@@ -732,9 +740,9 @@
           <option value="all">全部章節</option>
         </select>
       </div>
-      <div style="display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;">
-        <button class="btn btn-primary" id="startBtn">開始</button>
+      <div class="toolbar-actions">
         <button class="btn btn-danger" id="clearWrongBtn" type="button">清除錯題</button>
+        <button class="btn btn-primary" id="startBtn">開始</button>
       </div>
     </div>
 
@@ -1317,7 +1325,6 @@
           setTimeout(()=>{
             state.index++;
             render();
-            window.scrollTo({ top: 0, behavior: "smooth" });
           }, 220);
         }
       }
@@ -1427,7 +1434,6 @@
             state.qnavOpen = false;
           }
           render();
-          window.scrollTo({ top: 0, behavior: "smooth" });
         });
         qnav.appendChild(btn);
       });
@@ -1474,7 +1480,6 @@
       if(state.index > 0){
         state.index--;
         render();
-        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
@@ -1482,7 +1487,6 @@
       if(state.index < state.list.length - 1){
         state.index++;
         render();
-        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
