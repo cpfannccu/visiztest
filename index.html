@@ -23,7 +23,6 @@
       --warning-bg:#fffbeb;
       --shadow:0 12px 32px rgba(15,23,42,.06);
       --radius:20px;
-      --safe-bottom:calc(env(safe-area-inset-bottom, 0px) + 10px);
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -37,7 +36,7 @@
     .app{
       max-width:1080px;
       margin:0 auto;
-      padding:14px 14px 100px;
+      padding:14px 14px 28px;
     }
 
     .top{
@@ -237,14 +236,14 @@
     .qno{
       color:var(--muted);
       font-size:14px;
-      margin-bottom:10px;
+      margin-bottom:8px;
     }
 
     .qtext{
       font-size:28px;
       line-height:1.65;
       font-weight:900;
-      margin-bottom:22px;
+      margin-bottom:18px;
     }
 
     .options{
@@ -307,7 +306,7 @@
 
     .feedback{
       display:none;
-      margin-top:16px;
+      margin-top:14px;
       border:1px dashed var(--line);
       border-radius:16px;
       padding:14px 16px;
@@ -337,7 +336,7 @@
     .nav-actions{
       display:flex;
       gap:10px;
-      margin-top:18px;
+      margin-top:16px;
       flex-wrap:wrap;
     }
 
@@ -376,6 +375,10 @@
     .qnum.wrong{background:#fee2e2;color:#991b1b}
     .qnum.answered{background:#dbeafe;color:#1d4ed8}
 
+    .qnav-toggle{
+      display:none;
+    }
+
     .result{
       display:none;
       text-align:center;
@@ -403,7 +406,7 @@
 
     @media (max-width: 768px){
       .app{
-        padding:10px 10px 90px;
+        padding:6px 6px 14px;
       }
 
       .top{
@@ -412,134 +415,239 @@
 
       .mobile-top{
         display:block;
-        position:sticky;
-        top:0;
-        z-index:20;
-        margin:0 -10px 10px;
-        padding:10px;
-        background:rgba(243,246,251,.95);
-        backdrop-filter:blur(10px);
-        border-bottom:1px solid rgba(217,226,239,.9);
+        margin:0 0 6px;
       }
 
       .mobile-row{
         display:flex;
         justify-content:space-between;
         align-items:center;
-        gap:10px;
+        gap:6px;
       }
 
       .mobile-title{
-        font-size:18px;
+        font-size:15px;
         font-weight:900;
+        line-height:1.2;
       }
 
       .mobile-mini{
-        margin-top:8px;
+        margin-top:4px;
         display:grid;
         grid-template-columns:repeat(3,1fr);
-        gap:8px;
+        gap:4px;
       }
 
       .mobile-card{
         background:#fff;
         border:1px solid var(--line);
-        border-radius:14px;
-        padding:8px 10px;
+        border-radius:10px;
+        padding:5px 6px;
       }
 
       .mobile-card .k{
-        font-size:11px;
+        font-size:9px;
         color:var(--muted);
       }
 
       .mobile-card .v{
-        margin-top:3px;
-        font-size:18px;
+        margin-top:1px;
+        font-size:13px;
         font-weight:900;
+        line-height:1.1;
       }
 
       .toolbar{
         grid-template-columns:1fr;
-        padding:12px;
+        padding:8px;
+        gap:6px;
+        margin-bottom:8px;
+        border-radius:14px;
+      }
+
+      .toolbar label{
+        font-size:11px;
+        margin-bottom:3px;
+      }
+
+      .toolbar select{
+        padding:8px 10px;
+        font-size:13px;
+        border-radius:10px;
+      }
+
+      .toolbar .btn{
+        padding:8px 12px;
+        font-size:13px;
+        border-radius:10px;
       }
 
       .panel{
-        padding:14px;
-        border-radius:18px;
+        padding:10px;
+        border-radius:14px;
       }
 
-      .qtext{
-        font-size:21px;
+      .head{
+        margin-bottom:8px;
+        gap:6px;
       }
 
-      .option{
-        padding:14px;
-        border-radius:16px;
-        gap:10px;
+      .badge{
+        padding:5px 8px;
+        font-size:11px;
       }
 
-      .option-key{
-        width:28px;
-        flex:0 0 28px;
-        font-size:18px;
+      .meta{
+        font-size:11px;
       }
 
-      .option-text{
-        font-size:16px;
-      }
-
-      .qnav{
-        grid-template-columns:repeat(5,1fr);
+      .status-line{
+        margin-bottom:8px;
+        padding:7px 9px;
+        font-size:11px;
+        border-radius:10px;
       }
 
       .progress-info{
-        flex-direction:column;
-        gap:4px;
+        font-size:11px;
+        margin-bottom:4px;
+      }
+
+      .progress{
+        height:7px;
+        margin-bottom:10px;
+      }
+
+      .chapter{
+        padding:4px 8px;
+        font-size:10px;
+        margin-bottom:6px;
+      }
+
+      .qno{
+        font-size:11px;
+        margin-bottom:4px;
+      }
+
+      .qtext{
+        font-size:17px;
+        line-height:1.38;
+        margin-bottom:10px;
+      }
+
+      .options{
+        gap:6px;
+      }
+
+      .option{
+        padding:8px 10px;
+        border-radius:12px;
+        gap:6px;
+        min-height:auto;
+      }
+
+      .option-key{
+        width:20px;
+        flex:0 0 20px;
+        font-size:14px;
+        line-height:1.2;
+      }
+
+      .option-text{
+        font-size:13px;
+        line-height:1.35;
+        font-weight:700;
+      }
+
+      .feedback{
+        margin-top:8px;
+        padding:8px 10px;
+        border-radius:10px;
+      }
+
+      .desc{
+        margin-top:5px;
+        font-size:12px;
+        line-height:1.4;
       }
 
       .nav-actions{
-        display:none;
+        display:flex;
+        gap:6px;
+        margin-top:10px;
       }
 
-      .mobile-bar{
-        display:grid;
-        grid-template-columns:1fr 1fr 1fr;
-        gap:8px;
-        position:fixed;
-        left:10px;
-        right:10px;
-        bottom:var(--safe-bottom);
-        z-index:30;
-        background:rgba(255,255,255,.95);
-        border:1px solid var(--line);
-        border-radius:18px;
-        padding:8px;
-        box-shadow:0 10px 30px rgba(15,23,42,.12);
-        backdrop-filter:blur(8px);
+      .nav-actions .btn{
+        flex:1;
+        padding:8px 6px;
+        font-size:13px;
+        border-radius:10px;
       }
 
-      .mobile-bar button{
+      .qnav-wrap{
+        margin-top:12px;
+        padding-top:10px;
+      }
+
+      .qnav-head{
+        align-items:center;
+      }
+
+      .qnav-head .meta{
+        font-size:11px;
+      }
+
+      .qnav-toggle{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:6px;
         border:none;
-        border-radius:12px;
-        padding:12px 8px;
-        font-weight:900;
+        border-radius:10px;
+        padding:7px 10px;
+        background:#eef2ff;
+        color:#1e40af;
+        font-size:12px;
+        font-weight:800;
         cursor:pointer;
       }
 
-      .mobile-bar .prev{
-        background:#eef2ff;
-        color:#1e40af;
+      .qnav{
+        display:none;
+        grid-template-columns:repeat(5,1fr);
+        gap:5px;
       }
 
-      .mobile-bar .next{
-        background:#1d4ed8;
-        color:#fff;
+      .qnav.mobile-open{
+        display:grid;
+        margin-top:8px;
       }
 
-      .mobile-bar .submit{
-        background:#f59e0b;
-        color:#fff;
+      .qnum{
+        padding:7px 0;
+        font-size:12px;
+        border-radius:8px;
+      }
+
+      .result{
+        padding:18px 6px 6px;
+      }
+
+      .result h2{
+        font-size:22px;
+        margin:0 0 8px;
+      }
+
+      .result p{
+        font-size:13px;
+      }
+
+      .score{
+        font-size:46px;
+      }
+
+      .mobile-bar{
+        display:none !important;
       }
     }
   </style>
@@ -646,7 +754,10 @@
         <div class="qnav-wrap">
           <div class="qnav-head">
             <div class="meta">題號快速跳轉</div>
-            <div class="meta" id="navMeta">未開始</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <div class="meta" id="navMeta">未開始</div>
+              <button class="qnav-toggle" id="qnavToggle" type="button">展開題號</button>
+            </div>
           </div>
           <div class="qnav" id="qnav"></div>
         </div>
@@ -853,6 +964,7 @@
     const feedbackDesc = document.getElementById("feedbackDesc");
     const qnav = document.getElementById("qnav");
     const navMeta = document.getElementById("navMeta");
+    const qnavToggle = document.getElementById("qnavToggle");
 
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
@@ -878,6 +990,7 @@
       results: {},
       submitted: false,
       reviewMode: false,
+      qnavOpen: false,
       wrongIds: loadWrongIds()
     };
 
@@ -895,6 +1008,29 @@
 
     function isExamMode(){
       return ["exam20","exam50","exam100"].includes(state.mode);
+    }
+
+    function isMobile(){
+      return window.innerWidth <= 768;
+    }
+
+    function shouldAutoNext(){
+      return isMobile() && !isExamMode();
+    }
+
+    function syncQnavToggle(){
+      if(!isMobile()){
+        qnav.classList.remove("mobile-open");
+        qnavToggle.textContent = "展開題號";
+        return;
+      }
+      if(state.qnavOpen){
+        qnav.classList.add("mobile-open");
+        qnavToggle.textContent = "收起題號";
+      }else{
+        qnav.classList.remove("mobile-open");
+        qnavToggle.textContent = "展開題號";
+      }
     }
 
     function examCount(mode){
@@ -959,6 +1095,7 @@
       state.results = {};
       state.submitted = false;
       state.reviewMode = false;
+      state.qnavOpen = false;
 
       resultWrap.classList.remove("show");
       quizWrap.style.display = "block";
@@ -978,6 +1115,7 @@
         updateNavButtons();
         updateSubmitButtons();
         updateProgress();
+        syncQnavToggle();
         return;
       }
 
@@ -1090,6 +1228,9 @@
         }else if(state.mode === "wrongOnly"){
           statusLine.classList.add("show");
           statusLine.textContent = "錯題複習模式：系統會保留你答錯過的題目。";
+        }else if(shouldAutoNext()){
+          statusLine.classList.add("show");
+          statusLine.textContent = "手機精簡模式：作答後會自動跳到下一題。";
         }else{
           statusLine.classList.remove("show");
         }
@@ -1118,6 +1259,16 @@
       }
 
       render();
+
+      if(shouldAutoNext()){
+        if(state.index < state.list.length - 1){
+          setTimeout(()=>{
+            state.index++;
+            render();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }, 220);
+        }
+      }
     }
 
     function submitExam(){
@@ -1220,7 +1371,11 @@
 
         btn.addEventListener("click", ()=>{
           state.index = idx;
+          if(isMobile()){
+            state.qnavOpen = false;
+          }
           render();
+          window.scrollTo({ top: 0, behavior: "smooth" });
         });
         qnav.appendChild(btn);
       });
@@ -1231,7 +1386,9 @@
       if(!q) return;
 
       modeBadge.textContent = getModeName();
-      metaText.textContent = "目前題庫 " + state.list.length + " 題";
+      metaText.textContent = shouldAutoNext() && !isExamMode()
+        ? "手機版已啟用：作答後自動跳下一題"
+        : "目前題庫 " + state.list.length + " 題";
       chapterTag.textContent = "章節：" + (chapters[q.chapter] || q.chapter);
       questionNoText.textContent = "第 " + (state.index + 1) + " 題 / 共 " + state.list.length + " 題";
       questionText.textContent = q.question;
@@ -1243,6 +1400,7 @@
       updateProgress();
       updateNavButtons();
       updateSubmitButtons();
+      syncQnavToggle();
 
       if(isExamMode() && !state.submitted){
         const answered = Object.keys(state.picked).length;
@@ -1251,6 +1409,9 @@
       }else if(state.mode === "wrongOnly"){
         statusLine.classList.add("show");
         statusLine.textContent = "錯題複習模式：系統會保留你答錯過的題目。";
+      }else if(shouldAutoNext()){
+        statusLine.classList.add("show");
+        statusLine.textContent = "手機精簡模式：作答後會自動跳到下一題。";
       }else{
         statusLine.classList.remove("show");
       }
@@ -1260,6 +1421,7 @@
       if(state.index > 0){
         state.index--;
         render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
@@ -1267,6 +1429,7 @@
       if(state.index < state.list.length - 1){
         state.index++;
         render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
@@ -1293,6 +1456,7 @@
     updateProgress();
     updateNavButtons();
     updateSubmitButtons();
+    syncQnavToggle();
 
     startBtn.addEventListener("click", startQuiz);
     clearWrongBtn.addEventListener("click", clearWrongQuestions);
@@ -1305,6 +1469,17 @@
     reviewBtn.addEventListener("click", backToReview);
     restartExamBtn.addEventListener("click", restartExam);
     backPracticeBtn.addEventListener("click", backPractice);
+    qnavToggle.addEventListener("click", ()=>{
+      if(!isMobile()) return;
+      state.qnavOpen = !state.qnavOpen;
+      syncQnavToggle();
+    });
+    window.addEventListener("resize", ()=>{
+      if(!isMobile()){
+        state.qnavOpen = false;
+      }
+      render();
+    });
   </script>
 </body>
 </html>
