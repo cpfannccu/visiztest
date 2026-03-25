@@ -242,8 +242,8 @@
     }
 
     .qtext{
-      font-size:28px;
-      line-height:1.65;
+      font-size:24px;
+      line-height:1.58;
       font-weight:900;
       margin-bottom:18px;
     }
@@ -557,8 +557,8 @@
       }
 
       .qtext{
-        font-size:17px;
-        line-height:1.38;
+        font-size:15px;
+        line-height:1.42;
         margin-bottom:10px;
       }
 
@@ -810,6 +810,8 @@
   </div>
 
   <script>
+    const AUTO_NEXT_DELAY = 650;
+
     const chapters = {
       intro: "視覺化概論與歷史",
       color: "色彩與視覺原則",
@@ -1274,9 +1276,6 @@
         }else if(state.mode === "wrongOnly"){
           statusLine.classList.add("show");
           statusLine.textContent = "錯題複習模式：系統會保留你答錯過的題目。";
-        }else if(shouldAutoNext()){
-          statusLine.classList.add("show");
-          statusLine.textContent = "手機精簡模式：作答後會自動跳到下一題。";
         }else{
           statusLine.classList.remove("show");
         }
@@ -1325,7 +1324,7 @@
           setTimeout(()=>{
             state.index++;
             render();
-          }, 220);
+          }, AUTO_NEXT_DELAY);
         }
       }
     }
@@ -1444,9 +1443,7 @@
       if(!q) return;
 
       modeBadge.textContent = getModeName();
-      metaText.textContent = shouldAutoNext() && !isExamMode()
-        ? "手機版已啟用：作答後自動跳下一題"
-        : "目前題庫 " + state.list.length + " 題";
+      metaText.textContent = "目前題庫 " + state.list.length + " 題";
       chapterTag.textContent = "章節：" + (chapters[q.chapter] || q.chapter);
       questionNoText.textContent = "第 " + (state.index + 1) + " 題 / 共 " + state.list.length + " 題";
       questionText.textContent = q.question;
@@ -1468,9 +1465,6 @@
       }else if(state.mode === "wrongOnly"){
         statusLine.classList.add("show");
         statusLine.textContent = "錯題複習模式：系統會保留你答錯過的題目。";
-      }else if(shouldAutoNext()){
-        statusLine.classList.add("show");
-        statusLine.textContent = "手機精簡模式：作答後會自動跳到下一題。";
       }else{
         statusLine.classList.remove("show");
       }
