@@ -375,7 +375,8 @@
     .qnum.wrong{background:#fee2e2;color:#991b1b}
     .qnum.answered{background:#dbeafe;color:#1d4ed8}
 
-    .qnav-toggle{
+    .qnav-toggle,
+    .mobile-stats-toggle{
       display:none;
     }
 
@@ -431,11 +432,29 @@
         line-height:1.2;
       }
 
+      .mobile-stats-toggle{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        border:none;
+        border-radius:10px;
+        padding:7px 10px;
+        background:#eef2ff;
+        color:#1e40af;
+        font-size:12px;
+        font-weight:800;
+        cursor:pointer;
+      }
+
       .mobile-mini{
+        display:none;
         margin-top:4px;
-        display:grid;
         grid-template-columns:repeat(3,1fr);
         gap:4px;
+      }
+
+      .mobile-mini.open{
+        display:grid;
       }
 
       .mobile-card{
@@ -657,8 +676,9 @@
     <div class="mobile-top">
       <div class="mobile-row">
         <div class="mobile-title">視覺化軟體應用師題庫</div>
+        <button class="mobile-stats-toggle" id="mobileStatsToggle" type="button">展開統計</button>
       </div>
-      <div class="mobile-mini">
+      <div class="mobile-mini" id="mobileMini">
         <div class="mobile-card">
           <div class="k">題數</div>
           <div class="v" id="mTotal">135</div>
@@ -677,7 +697,6 @@
     <div class="top">
       <div>
         <div class="title">視覺化軟體應用師題庫練習系統</div>
-        <div class="sub">單檔版，可直接部署到 GitHub Pages / Netlify / Cloudflare Pages</div>
       </div>
       <div class="stats">
         <div class="stat">
@@ -965,6 +984,8 @@
     const qnav = document.getElementById("qnav");
     const navMeta = document.getElementById("navMeta");
     const qnavToggle = document.getElementById("qnavToggle");
+    const mobileStatsToggle = document.getElementById("mobileStatsToggle");
+    const mobileMini = document.getElementById("mobileMini");
 
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
@@ -991,6 +1012,7 @@
       submitted: false,
       reviewMode: false,
       qnavOpen: false,
+      mobileStatsOpen: false,
       wrongIds: loadWrongIds()
     };
 
@@ -1030,6 +1052,21 @@
       }else{
         qnav.classList.remove("mobile-open");
         qnavToggle.textContent = "展開題號";
+      }
+    }
+
+    function syncMobileStats(){
+      if(!isMobile()){
+        mobileMini.classList.remove("open");
+        mobileStatsToggle.textContent = "展開統計";
+        return;
+      }
+      if(state.mobileStatsOpen){
+        mobileMini.classList.add("open");
+        mobileStatsToggle.textContent = "收起統計";
+      }else{
+        mobileMini.classList.remove("open");
+        mobileStatsToggle.textContent = "展開統計";
       }
     }
 
@@ -1116,6 +1153,7 @@
         updateSubmitButtons();
         updateProgress();
         syncQnavToggle();
+        syncMobileStats();
         return;
       }
 
@@ -1237,6 +1275,16 @@
       }, 1500);
     }
 
+    function scrollToSubmitIfNeeded(){
+      if(!isMobile()) return;
+      if(!isExamMode()) return;
+      if(state.index !== state.list.length - 1) return;
+
+      setTimeout(()=>{
+        submitBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 180);
+    }
+
     function answerQuestion(choice){
       const q = getCurrentQuestion();
       if(!q) return;
@@ -1259,6 +1307,10 @@
       }
 
       render();
+
+      if(isExamMode()){
+        scrollToSubmitIfNeeded();
+      }
 
       if(shouldAutoNext()){
         if(state.index < state.list.length - 1){
@@ -1401,6 +1453,7 @@
       updateNavButtons();
       updateSubmitButtons();
       syncQnavToggle();
+      syncMobileStats();
 
       if(isExamMode() && !state.submitted){
         const answered = Object.keys(state.picked).length;
@@ -1457,6 +1510,7 @@
     updateNavButtons();
     updateSubmitButtons();
     syncQnavToggle();
+    syncMobileStats();
 
     startBtn.addEventListener("click", startQuiz);
     clearWrongBtn.addEventListener("click", clearWrongQuestions);
@@ -1469,14 +1523,23 @@
     reviewBtn.addEventListener("click", backToReview);
     restartExamBtn.addEventListener("click", restartExam);
     backPracticeBtn.addEventListener("click", backPractice);
+
     qnavToggle.addEventListener("click", ()=>{
       if(!isMobile()) return;
       state.qnavOpen = !state.qnavOpen;
       syncQnavToggle();
     });
+
+    mobileStatsToggle.addEventListener("click", ()=>{
+      if(!isMobile()) return;
+      state.mobileStatsOpen = !state.mobileStatsOpen;
+      syncMobileStats();
+    });
+
     window.addEventListener("resize", ()=>{
       if(!isMobile()){
         state.qnavOpen = false;
+        state.mobileStatsOpen = false;
       }
       render();
     });
